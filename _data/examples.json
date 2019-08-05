@@ -84,6 +84,10 @@
         "name": "isotype_bar_chart_emoji",
         "title": "Isotype Bar Chart with Emoji",
         "description": "This example was inspired by [@jakevdp](https://github.com/jakevdp) and Isotype Bar Chart by [@jwoLondon](https://github.com/jwoLondon)"
+      },
+      {
+        "name": "bar_month_temporal_initial",
+        "title": "Bar Chart showing Intiials of Month Names"
       }
     ],
     "Scatter & Strip Plots": [
@@ -137,6 +141,10 @@
       {
         "name": "text_scatterplot_colored",
         "title": "Scatter Plot with Text Marks"
+      },
+      {
+        "name": "scatter_image",
+        "title": "Image-based Scatter Plot"
       }
     ],
     "Line Charts": [
@@ -344,6 +352,14 @@
       {
         "name": "layer_line_rolling_mean_point_raw",
         "title": "Layering Rolling Averages over Raw Values"
+      },
+      {
+        "name": "layer_point_line_regression",
+        "title": "A Scatterplot with a Regression Line"
+      },
+      {
+        "name": "layer_point_line_loess",
+        "title": "A Scatterplot with a Loess Regression Line"
       }
     ]
   },
