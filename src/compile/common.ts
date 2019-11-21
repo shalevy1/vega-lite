@@ -14,7 +14,7 @@ import {MarkConfig, MarkDef} from '../mark';
 import {fieldValidPredicate} from '../predicate';
 import {ScaleType} from '../scale';
 import {SortFields} from '../sort';
-import {formatExpression, TimeUnit} from '../timeunit';
+import {formatExpression, TimeUnit, toTimeUnit} from '../timeunit';
 import {QUANTITATIVE} from '../type';
 import {getFirstDefined} from '../util';
 import {BaseMarkConfig, VgEncodeEntry} from '../vega.schema';
@@ -95,7 +95,7 @@ export function formatSignalRef(
         vgField(fieldDef, {
           expr
         }),
-        fieldDef.timeUnit,
+        toTimeUnit(fieldDef.timeUnit),
         specifiedFormat,
         config.text.shortTimeLabels,
         config.timeFormat,

@@ -1,6 +1,7 @@
 import {DateTimeExpr, dateTimeExpr} from './datetime';
 import * as log from './log';
 import {accessPathWithDatum, Flag, keys, replaceAll} from './util';
+import {isObject} from 'vega-util';
 
 export namespace TimeUnit {
   export const YEAR: 'year' = 'year';
@@ -215,6 +216,22 @@ export function getLocalTimeUnit(t: UtcTimeUnit): LocalTimeUnit {
 
 export type TimeUnit = SingleTimeUnit | MultiTimeUnit;
 
+export interface TimeUnitParams {
+  /**
+   * Time unit to discretize using
+   * (e.g., `year`, `yearmonth`, `month`, `hours`).
+   */
+  unit: TimeUnit;
+
+  /**
+   * The discretizing step size in terms of the smallest unit
+   * specified.
+   *
+   * __Default value__: 1
+   */
+  step?: number;
+}
+
 const TIMEUNIT_INDEX: Flag<TimeUnit> = {
   ...LOCAL_SINGLE_TIMEUNIT_INDEX,
   ...UTC_SINGLE_TIMEUNIT_INDEX,
@@ -242,6 +259,26 @@ const SET_DATE_METHOD: Record<LocalSingleTimeUnit, DateMethodName> = {
   quarter: null,
   day: null
 };
+
+export function isTimeUnitParams(timeUnit: TimeUnit | TimeUnitParams): timeUnit is TimeUnitParams {
+  return isObject(timeUnit);
+}
+
+export function toTimeUnitParams(timeUnit: TimeUnit | TimeUnitParams): TimeUnitParams {
+  if (isTimeUnitParams(timeUnit)) {
+    return timeUnit;
+  } else {
+    return {unit: timeUnit};
+  }
+}
+
+export function toTimeUnit(timeUnit: TimeUnit | TimeUnitParams): TimeUnit {
+  if (isTimeUnitParams(timeUnit)) {
+    return timeUnit['unit'];
+  } else {
+    return timeUnit;
+  }
+}
 
 /**
  * Converts a date to only have the measurements relevant to the specified unit
@@ -423,10 +460,23 @@ export function formatExpression(
   return expression || undefined;
 }
 
-export function normalizeTimeUnit(timeUnit: TimeUnit): TimeUnit {
-  if (timeUnit !== 'day' && timeUnit.indexOf('day') >= 0) {
-    log.warn(log.message.dayReplacedWithDate(timeUnit));
-    return replaceAll(timeUnit, 'day', 'date') as TimeUnit;
+export function normalizeTimeUnit(timeUnit: TimeUnit | TimeUnitParams): TimeUnit | TimeUnitParams {
+  if (isTimeUnitParams(timeUnit)) {
+    const unit = timeUnit['unit'];
+    if (unit !== 'day' && unit.indexOf('day') >= 0) {
+      log.warn(log.message.dayReplacedWithDate(unit));
+      return {
+        unit: replaceAll(unit, 'day', 'date') as TimeUnit,
+        step: timeUnit['step']
+      };
+    }
+
+    return timeUnit;
+  } else {
+    if (timeUnit !== 'day' && timeUnit.indexOf('day') >= 0) {
+      log.warn(log.message.dayReplacedWithDate(timeUnit));
+      return replaceAll(timeUnit, 'day', 'date') as TimeUnit;
+    }
+    return timeUnit;
   }
-  return timeUnit;
 }

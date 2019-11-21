@@ -6,6 +6,7 @@ import {SelectionInit, SelectionInitInterval} from '../../../selection';
 import {Dict, hash, keys, varName, replacePathInField, duplicate} from '../../../util';
 import {TimeUnitComponent, TimeUnitNode} from '../../data/timeunit';
 import {TransformCompiler} from './transforms';
+import {toTimeUnitParams} from '../../../timeunit';
 
 export const TUPLE_FIELDS = '_tuple_fields';
 
@@ -109,6 +110,7 @@ const project: TransformCompiler = {
         if (fieldDef.timeUnit) {
           field = model.vgField(channel);
 
+          const {unit, step} = toTimeUnitParams(fieldDef.timeUnit);
           // Construct TimeUnitComponents which will be combined into a
           // TimeUnitNode. This node may need to be inserted into the
           // dataflow if the selection is used across views that do not
@@ -116,7 +118,8 @@ const project: TransformCompiler = {
           const component = {
             as: field,
             field: fieldDef.field,
-            timeUnit: fieldDef.timeUnit
+            timeUnit: unit,
+            step
           };
           timeUnits[hash(component)] = component;
         }

@@ -27,7 +27,9 @@ import {
   isLocalSingleTimeUnit,
   isUtcSingleTimeUnit,
   normalizeTimeUnit,
-  TimeUnit
+  TimeUnit,
+  TimeUnitParams,
+  toTimeUnit
 } from './timeunit';
 import {AggregatedFieldDef, WindowFieldDef} from './transform';
 import {getFullName, QUANTITATIVE, StandardType, Type} from './type';
@@ -210,7 +212,7 @@ export interface FieldDefBase<F, B extends Bin = Bin> {
    *
    * __See also:__ [`timeUnit`](https://vega.github.io/vega-lite/docs/timeunit.html) documentation.
    */
-  timeUnit?: TimeUnit;
+  timeUnit?: TimeUnit | TimeUnitParams;
 
   /**
    * Aggregation function for the field
@@ -600,7 +602,7 @@ export function vgField(
             fn = String(aggregate);
           }
         } else if (timeUnit) {
-          fn = String(timeUnit);
+          fn = String(toTimeUnit(timeUnit));
           suffix = ((!contains(['range', 'mid'], opt.binSuffix) && opt.binSuffix) || '') + (opt.suffix ?? '');
         }
       }
@@ -661,7 +663,7 @@ export function verbalTitleFormatter(fieldDef: FieldDefBase<string>, config: Con
   } else if (isBinning(bin)) {
     return `${field} (binned)`;
   } else if (timeUnit) {
-    const units = getTimeUnitParts(timeUnit).join('-');
+    const units = getTimeUnitParts(toTimeUnit(timeUnit)).join('-');
     return `${field} (${units})`;
   } else if (aggregate) {
     if (isArgmaxDef(aggregate)) {
@@ -683,7 +685,7 @@ export function functionalTitleFormatter(fieldDef: FieldDefBase<string>) {
     return `${field} for argmin(${aggregate.argmin})`;
   }
 
-  const fn = aggregate || timeUnit || (isBinning(bin) && 'bin');
+  const fn = aggregate || toTimeUnit(timeUnit) || (isBinning(bin) && 'bin');
   if (fn) {
     return fn.toUpperCase() + '(' + field + ')';
   } else {
@@ -1056,7 +1058,9 @@ export function valueExpr(
  * Standardize value array -- convert each value to Vega expression if applicable
  */
 export function valueArray(fieldDef: TypedFieldDef<string>, values: (number | string | boolean | DateTime)[]) {
-  const {timeUnit, type} = fieldDef;
+  const type = fieldDef['type'];
+  const timeUnit = toTimeUnit(fieldDef['timeUnit']);
+
   return values.map(v => {
     const expr = valueExpr(v, {timeUnit, type, undefinedIfExprNotRequired: true});
     // return signal for the expression if we need an expression

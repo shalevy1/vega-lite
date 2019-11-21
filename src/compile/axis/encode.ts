@@ -4,6 +4,7 @@ import {ScaleType} from '../../scale';
 import {keys} from '../../util';
 import {timeFormatExpression} from '../common';
 import {UnitModel} from '../unit';
+import {toTimeUnit} from '../../timeunit';
 
 export function labels(model: UnitModel, channel: PositionScaleChannel, specifiedLabelsSpec: any) {
   const fieldDef =
@@ -20,7 +21,7 @@ export function labels(model: UnitModel, channel: PositionScaleChannel, specifie
 
     const expr = timeFormatExpression(
       'datum.value',
-      fieldDef.timeUnit,
+      toTimeUnit(fieldDef.timeUnit),
       axis.format,
       config.axis.shortTimeLabels,
       null,

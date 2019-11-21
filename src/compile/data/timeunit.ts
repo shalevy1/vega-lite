@@ -1,7 +1,7 @@
 import {TimeUnitTransform as VgTimeUnitTransform} from 'vega';
 import {getSecondaryRangeChannel} from '../../channel';
 import {hasBand, vgField} from '../../channeldef';
-import {getTimeUnitParts} from '../../timeunit';
+import {getTimeUnitParts, toTimeUnitParams} from '../../timeunit';
 import {TimeUnitTransform} from '../../transform';
 import {Dict, duplicate, hash, keys, vals} from '../../util';
 import {isUnitModel, ModelWithField} from '../model';
@@ -31,9 +31,12 @@ export class TimeUnitNode extends DataFlowNode {
 
       if (timeUnit) {
         const as = vgField(fieldDef, {forAs: true});
-        timeUnitComponent[hash({as, timeUnit, field})] = {
+        const {unit, step} = toTimeUnitParams(timeUnit);
+
+        timeUnitComponent[hash({as, timeUnit: unit, step, field})] = {
           as,
-          timeUnit,
+          timeUnit: unit,
+          step,
           field,
           ...(band ? {band: true} : {})
         };
@@ -95,12 +98,13 @@ export class TimeUnitNode extends DataFlowNode {
     const transforms: VgTimeUnitTransform[] = [];
 
     for (const f of vals(this.formula)) {
-      const {timeUnit, field, as} = f;
+      const {timeUnit, step, field, as} = f;
 
       transforms.push({
         field,
         type: 'timeunit',
         units: getTimeUnitParts(timeUnit),
+        step,
         as: [as, `${as}_end`]
       });
     }

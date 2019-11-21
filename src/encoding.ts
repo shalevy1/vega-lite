@@ -44,7 +44,7 @@ import {Config} from './config';
 import * as log from './log';
 import {Mark, MarkDef} from './mark';
 import {EncodingFacetMapping} from './spec/facet';
-import {getDateTimeComponents} from './timeunit';
+import {getDateTimeComponents, toTimeUnitParams} from './timeunit';
 import {AggregatedFieldDef, BinTransform, TimeUnitTransform} from './transform';
 import {TEMPORAL} from './type';
 import {keys, some} from './util';
@@ -328,10 +328,11 @@ export function extractTransformsFromEncoding(oldEncoding: Encoding<Field>, conf
               newFieldDef['type'] = 'quantitative';
             }
           } else if (timeUnit) {
-            timeUnits.push({timeUnit, field, as: newField});
+            const {unit, step} = toTimeUnitParams(timeUnit);
+            timeUnits.push({timeUnit: unit, step, field, as: newField});
 
             // Add formatting to appropriate property based on the type of channel we're processing
-            const format = getDateTimeComponents(timeUnit, config.axis.shortTimeLabels).join(' ');
+            const format = getDateTimeComponents(unit, config.axis.shortTimeLabels).join(' ');
             const formatType = isTypedFieldDef(channelDef) && channelDef.type !== TEMPORAL && 'time';
             if (channel === 'text' || channel === 'tooltip') {
               newFieldDef['format'] = newFieldDef['format'] ?? format;

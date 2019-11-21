@@ -80,6 +80,12 @@ export interface TimeUnitTransform {
    * The output field to write the timeUnit value.
    */
   as: FieldName;
+
+  /**
+   * The number of steps between bins, in terms of the smallest
+   * unit provided.
+   */
+  step?: number;
 }
 
 export interface AggregateTransform {
