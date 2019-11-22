@@ -42,20 +42,54 @@
   ],
   "marks": [
     {
-      "name": "marks",
-      "type": "rect",
-      "style": ["bar"],
-      "from": {"data": "source_0"},
+      "type": "group",
+      "from": {
+        "facet": {
+          "data": "source_0",
+          "name": "stack_group_main",
+          "groupby": "month_date",
+          "aggregate": {
+            "fields": ["__count_start", "__count_end"],
+            "ops": ["min", "max"]
+          }
+        }
+      },
       "encode": {
         "update": {
-          "fill": {"value": "#4c78a8"},
-          "opacity": {"value": 0.5},
-          "xc": {"scale": "x", "field": "month_date", "band": 0.5},
+          "clip": {"value": true},
           "width": {"scale": "size", "field": "weather"},
-          "y": {"scale": "y", "field": "__count_end"},
-          "y2": {"scale": "y", "field": "__count_start"}
+          "y": {"signal": "scale(\"y\", datum[\"max___count_end\"])"},
+          "y2": {"signal": "scale(\"y\", datum[\"min___count_start\"])"}
         }
-      }
+      },
+      "marks": [
+        {
+          "type": "group",
+          "encode": {
+            "update": {
+              "y": {"signal": "-scale(\"y\", datum[\"max___count_end\"])"}
+            }
+          },
+          "marks": [
+            {
+              "name": "marks",
+              "type": "rect",
+              "style": ["bar"],
+              "from": {"data": "stack_group_main"},
+              "encode": {
+                "update": {
+                  "fill": {"value": "#4c78a8"},
+                  "opacity": {"value": 0.5},
+                  "xc": {"scale": "x", "field": "month_date", "band": 0.5},
+                  "width": {"scale": "size", "field": "weather"},
+                  "y": {"scale": "y", "field": "__count_end"},
+                  "y2": {"scale": "y", "field": "__count_start"}
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "scales": [

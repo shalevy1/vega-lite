@@ -107,19 +107,62 @@
       },
       "marks": [
         {
-          "name": "concat_0_marks",
-          "type": "rect",
-          "style": ["bar"],
-          "from": {"data": "data_2"},
+          "type": "group",
+          "from": {
+            "facet": {
+              "data": "data_2",
+              "name": "stack_group_concat_0_main",
+              "groupby": "age",
+              "aggregate": {
+                "fields": ["sum_people_start", "sum_people_end"],
+                "ops": ["min", "max"]
+              }
+            }
+          },
           "encode": {
             "update": {
-              "fill": {"scale": "color", "field": "gender"},
-              "x": {"scale": "concat_0_x", "field": "sum_people_end"},
-              "x2": {"scale": "concat_0_x", "field": "sum_people_start"},
+              "clip": {"value": true},
               "y": {"scale": "concat_0_y", "field": "age"},
-              "height": {"scale": "concat_0_y", "band": true}
+              "height": {"scale": "concat_0_y", "band": true},
+              "x": {
+                "signal": "scale(\"concat_0_x\", datum[\"min_sum_people_start\"])"
+              },
+              "x2": {
+                "signal": "scale(\"concat_0_x\", datum[\"max_sum_people_end\"])"
+              }
             }
-          }
+          },
+          "marks": [
+            {
+              "type": "group",
+              "encode": {
+                "update": {
+                  "x": {
+                    "signal": "-scale(\"concat_0_x\", datum[\"min_sum_people_start\"])"
+                  }
+                }
+              },
+              "marks": [
+                {
+                  "name": "concat_0_marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {"data": "stack_group_concat_0_main"},
+                  "encode": {
+                    "update": {
+                      "fill": {"scale": "color", "field": "gender"},
+                      "x": {"scale": "concat_0_x", "field": "sum_people_end"},
+                      "x2": {
+                        "scale": "concat_0_x",
+                        "field": "sum_people_start"
+                      },
+                      "height": {"scale": "concat_0_y", "band": true}
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "axes": [
@@ -179,19 +222,62 @@
       },
       "marks": [
         {
-          "name": "concat_2_marks",
-          "type": "rect",
-          "style": ["bar"],
-          "from": {"data": "data_4"},
+          "type": "group",
+          "from": {
+            "facet": {
+              "data": "data_4",
+              "name": "stack_group_concat_2_main",
+              "groupby": "age",
+              "aggregate": {
+                "fields": ["sum_people_start", "sum_people_end"],
+                "ops": ["min", "max"]
+              }
+            }
+          },
           "encode": {
             "update": {
-              "fill": {"scale": "color", "field": "gender"},
-              "x": {"scale": "concat_2_x", "field": "sum_people_end"},
-              "x2": {"scale": "concat_2_x", "field": "sum_people_start"},
+              "clip": {"value": true},
               "y": {"scale": "concat_2_y", "field": "age"},
-              "height": {"scale": "concat_2_y", "band": true}
+              "height": {"scale": "concat_2_y", "band": true},
+              "x": {
+                "signal": "scale(\"concat_2_x\", datum[\"min_sum_people_start\"])"
+              },
+              "x2": {
+                "signal": "scale(\"concat_2_x\", datum[\"max_sum_people_end\"])"
+              }
             }
-          }
+          },
+          "marks": [
+            {
+              "type": "group",
+              "encode": {
+                "update": {
+                  "x": {
+                    "signal": "-scale(\"concat_2_x\", datum[\"min_sum_people_start\"])"
+                  }
+                }
+              },
+              "marks": [
+                {
+                  "name": "concat_2_marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {"data": "stack_group_concat_2_main"},
+                  "encode": {
+                    "update": {
+                      "fill": {"scale": "color", "field": "gender"},
+                      "x": {"scale": "concat_2_x", "field": "sum_people_end"},
+                      "x2": {
+                        "scale": "concat_2_x",
+                        "field": "sum_people_start"
+                      },
+                      "height": {"scale": "concat_2_y", "band": true}
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "axes": [

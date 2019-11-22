@@ -134,19 +134,55 @@
       },
       "marks": [
         {
-          "name": "child_marks",
-          "type": "rect",
-          "style": ["bar"],
-          "from": {"data": "facet"},
+          "type": "group",
+          "from": {
+            "facet": {
+              "data": "facet",
+              "name": "stack_group_child_main",
+              "groupby": "age",
+              "aggregate": {
+                "fields": ["sum_people_start", "sum_people_end"],
+                "ops": ["min", "max"]
+              }
+            }
+          },
           "encode": {
             "update": {
-              "fill": {"scale": "color", "field": "gender"},
+              "clip": {"value": true},
               "x": {"scale": "x", "field": "age"},
               "width": {"scale": "x", "band": true},
-              "y": {"scale": "y", "field": "sum_people_end"},
-              "y2": {"scale": "y", "field": "sum_people_start"}
+              "y": {"signal": "scale(\"y\", datum[\"max_sum_people_end\"])"},
+              "y2": {"signal": "scale(\"y\", datum[\"min_sum_people_start\"])"}
             }
-          }
+          },
+          "marks": [
+            {
+              "type": "group",
+              "encode": {
+                "update": {
+                  "y": {
+                    "signal": "-scale(\"y\", datum[\"max_sum_people_end\"])"
+                  }
+                }
+              },
+              "marks": [
+                {
+                  "name": "child_marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {"data": "stack_group_child_main"},
+                  "encode": {
+                    "update": {
+                      "fill": {"scale": "color", "field": "gender"},
+                      "width": {"scale": "x", "band": true},
+                      "y": {"scale": "y", "field": "sum_people_end"},
+                      "y2": {"scale": "y", "field": "sum_people_start"}
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "axes": [

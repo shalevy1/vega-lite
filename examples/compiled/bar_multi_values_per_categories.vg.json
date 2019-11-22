@@ -51,20 +51,49 @@
   ],
   "marks": [
     {
-      "name": "marks",
-      "type": "rect",
-      "style": ["bar"],
-      "from": {"data": "data_0"},
+      "type": "group",
+      "from": {
+        "facet": {
+          "data": "data_0",
+          "name": "stack_group_main",
+          "groupby": "a",
+          "aggregate": {"fields": ["b_start", "b_end"], "ops": ["min", "max"]}
+        }
+      },
       "encode": {
         "update": {
-          "fill": {"value": "steelblue"},
-          "stroke": {"value": "white"},
+          "clip": {"value": true},
           "x": {"scale": "x", "field": "a"},
           "width": {"scale": "x", "band": true},
-          "y": {"scale": "y", "field": "b_end"},
-          "y2": {"scale": "y", "field": "b_start"}
+          "y": {"signal": "scale(\"y\", datum[\"max_b_end\"])"},
+          "y2": {"signal": "scale(\"y\", datum[\"min_b_start\"])"}
         }
-      }
+      },
+      "marks": [
+        {
+          "type": "group",
+          "encode": {
+            "update": {"y": {"signal": "-scale(\"y\", datum[\"max_b_end\"])"}}
+          },
+          "marks": [
+            {
+              "name": "marks",
+              "type": "rect",
+              "style": ["bar"],
+              "from": {"data": "stack_group_main"},
+              "encode": {
+                "update": {
+                  "fill": {"value": "steelblue"},
+                  "stroke": {"value": "white"},
+                  "width": {"scale": "x", "band": true},
+                  "y": {"scale": "y", "field": "b_end"},
+                  "y2": {"scale": "y", "field": "b_start"}
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "scales": [

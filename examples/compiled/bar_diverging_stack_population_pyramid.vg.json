@@ -49,19 +49,57 @@
   ],
   "marks": [
     {
-      "name": "marks",
-      "type": "rect",
-      "style": ["bar"],
-      "from": {"data": "data_0"},
+      "type": "group",
+      "from": {
+        "facet": {
+          "data": "data_0",
+          "name": "stack_group_main",
+          "groupby": "age",
+          "aggregate": {
+            "fields": ["sum_signed_people_start", "sum_signed_people_end"],
+            "ops": ["min", "max"]
+          }
+        }
+      },
       "encode": {
         "update": {
-          "fill": {"scale": "color", "field": "gender"},
-          "x": {"scale": "x", "field": "sum_signed_people_end"},
-          "x2": {"scale": "x", "field": "sum_signed_people_start"},
+          "clip": {"value": true},
           "y": {"scale": "y", "field": "age"},
-          "height": {"scale": "y", "band": true}
+          "height": {"scale": "y", "band": true},
+          "x": {
+            "signal": "scale(\"x\", datum[\"min_sum_signed_people_start\"])"
+          },
+          "x2": {"signal": "scale(\"x\", datum[\"max_sum_signed_people_end\"])"}
         }
-      }
+      },
+      "marks": [
+        {
+          "type": "group",
+          "encode": {
+            "update": {
+              "x": {
+                "signal": "-scale(\"x\", datum[\"min_sum_signed_people_start\"])"
+              }
+            }
+          },
+          "marks": [
+            {
+              "name": "marks",
+              "type": "rect",
+              "style": ["bar"],
+              "from": {"data": "stack_group_main"},
+              "encode": {
+                "update": {
+                  "fill": {"scale": "color", "field": "gender"},
+                  "x": {"scale": "x", "field": "sum_signed_people_end"},
+                  "x2": {"scale": "x", "field": "sum_signed_people_start"},
+                  "height": {"scale": "y", "band": true}
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "scales": [

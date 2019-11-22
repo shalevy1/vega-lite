@@ -37,19 +37,53 @@
   ],
   "marks": [
     {
-      "name": "marks",
-      "type": "rect",
-      "style": ["bar"],
-      "from": {"data": "source_0"},
+      "type": "group",
+      "from": {
+        "facet": {
+          "data": "source_0",
+          "name": "stack_group_main",
+          "groupby": "variety",
+          "aggregate": {
+            "fields": ["sum_yield_start", "sum_yield_end"],
+            "ops": ["min", "max"]
+          }
+        }
+      },
       "encode": {
         "update": {
-          "fill": {"scale": "color", "field": "site"},
+          "clip": {"value": true},
           "x": {"scale": "x", "field": "variety"},
           "width": {"scale": "x", "band": true},
-          "y": {"scale": "y", "field": "sum_yield_end"},
-          "y2": {"scale": "y", "field": "sum_yield_start"}
+          "y": {"signal": "scale(\"y\", datum[\"max_sum_yield_end\"])"},
+          "y2": {"signal": "scale(\"y\", datum[\"min_sum_yield_start\"])"}
         }
-      }
+      },
+      "marks": [
+        {
+          "type": "group",
+          "encode": {
+            "update": {
+              "y": {"signal": "-scale(\"y\", datum[\"max_sum_yield_end\"])"}
+            }
+          },
+          "marks": [
+            {
+              "name": "marks",
+              "type": "rect",
+              "style": ["bar"],
+              "from": {"data": "stack_group_main"},
+              "encode": {
+                "update": {
+                  "fill": {"scale": "color", "field": "site"},
+                  "width": {"scale": "x", "band": true},
+                  "y": {"scale": "y", "field": "sum_yield_end"},
+                  "y2": {"scale": "y", "field": "sum_yield_start"}
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "scales": [

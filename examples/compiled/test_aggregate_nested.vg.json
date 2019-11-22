@@ -74,19 +74,62 @@
   ],
   "marks": [
     {
-      "name": "marks",
-      "type": "rect",
-      "style": ["bar"],
-      "from": {"data": "data_0"},
+      "type": "group",
+      "from": {
+        "facet": {
+          "data": "data_0",
+          "name": "stack_group_main",
+          "groupby": "properties\\.variety",
+          "aggregate": {
+            "fields": [
+              "sum_properties\\.yield_start",
+              "sum_properties\\.yield_end"
+            ],
+            "ops": ["min", "max"]
+          }
+        }
+      },
       "encode": {
         "update": {
-          "fill": {"scale": "color", "field": "properties\\.site"},
-          "x": {"scale": "x", "field": "sum_properties\\.yield_end"},
-          "x2": {"scale": "x", "field": "sum_properties\\.yield_start"},
+          "clip": {"value": true},
           "y": {"scale": "y", "field": "properties\\.variety"},
-          "height": {"scale": "y", "band": true}
+          "height": {"scale": "y", "band": true},
+          "x": {
+            "signal": "scale(\"x\", datum[\"min_sum_properties\\\\.yield_start\"])"
+          },
+          "x2": {
+            "signal": "scale(\"x\", datum[\"max_sum_properties\\\\.yield_end\"])"
+          }
         }
-      }
+      },
+      "marks": [
+        {
+          "type": "group",
+          "encode": {
+            "update": {
+              "x": {
+                "signal": "-scale(\"x\", datum[\"min_sum_properties\\\\.yield_start\"])"
+              }
+            }
+          },
+          "marks": [
+            {
+              "name": "marks",
+              "type": "rect",
+              "style": ["bar"],
+              "from": {"data": "stack_group_main"},
+              "encode": {
+                "update": {
+                  "fill": {"scale": "color", "field": "properties\\.site"},
+                  "x": {"scale": "x", "field": "sum_properties\\.yield_end"},
+                  "x2": {"scale": "x", "field": "sum_properties\\.yield_start"},
+                  "height": {"scale": "y", "band": true}
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "scales": [

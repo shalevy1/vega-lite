@@ -221,13 +221,31 @@
       },
       "marks": [
         {
-          "name": "child__repeat_repeat_Horsepower_marks",
-          "type": "rect",
-          "style": ["bar"],
-          "from": {"data": "data_1"},
+          "type": "group",
+          "from": {
+            "facet": {
+              "data": "data_1",
+              "name": "stack_group_child__repeat_repeat_Horsepower_main",
+              "groupby": "bin_maxbins_10_Horsepower",
+              "aggregate": {
+                "fields": ["__count_start", "__count_end"],
+                "ops": ["min", "max"]
+              }
+            }
+          },
           "encode": {
             "update": {
-              "fill": {"scale": "color", "field": "Origin"},
+              "clip": {"value": true},
+              "x": [
+                {
+                  "test": "!isValid(datum[\"bin_maxbins_10_Horsepower\"]) || !isFinite(+datum[\"bin_maxbins_10_Horsepower\"])",
+                  "value": 0
+                },
+                {
+                  "scale": "child__repeat_repeat_Horsepower_x",
+                  "field": "bin_maxbins_10_Horsepower_end"
+                }
+              ],
               "x2": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Horsepower\"]) || !isFinite(+datum[\"bin_maxbins_10_Horsepower\"])",
@@ -239,26 +257,60 @@
                   "offset": 1
                 }
               ],
-              "x": [
-                {
-                  "test": "!isValid(datum[\"bin_maxbins_10_Horsepower\"]) || !isFinite(+datum[\"bin_maxbins_10_Horsepower\"])",
-                  "value": 0
-                },
-                {
-                  "scale": "child__repeat_repeat_Horsepower_x",
-                  "field": "bin_maxbins_10_Horsepower_end"
-                }
-              ],
               "y": {
-                "scale": "child__repeat_repeat_Horsepower_y",
-                "field": "__count_end"
+                "signal": "scale(\"child__repeat_repeat_Horsepower_y\", datum[\"max___count_end\"])"
               },
               "y2": {
-                "scale": "child__repeat_repeat_Horsepower_y",
-                "field": "__count_start"
+                "signal": "scale(\"child__repeat_repeat_Horsepower_y\", datum[\"min___count_start\"])"
               }
             }
-          }
+          },
+          "marks": [
+            {
+              "type": "group",
+              "encode": {
+                "update": {
+                  "y": {
+                    "signal": "-scale(\"child__repeat_repeat_Horsepower_y\", datum[\"max___count_end\"])"
+                  }
+                }
+              },
+              "marks": [
+                {
+                  "name": "child__repeat_repeat_Horsepower_marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {
+                    "data": "stack_group_child__repeat_repeat_Horsepower_main"
+                  },
+                  "encode": {
+                    "update": {
+                      "fill": {"scale": "color", "field": "Origin"},
+                      "x2": [
+                        {
+                          "test": "!isValid(datum[\"bin_maxbins_10_Horsepower\"]) || !isFinite(+datum[\"bin_maxbins_10_Horsepower\"])",
+                          "value": 0
+                        },
+                        {
+                          "scale": "child__repeat_repeat_Horsepower_x",
+                          "field": "bin_maxbins_10_Horsepower",
+                          "offset": 1
+                        }
+                      ],
+                      "y": {
+                        "scale": "child__repeat_repeat_Horsepower_y",
+                        "field": "__count_end"
+                      },
+                      "y2": {
+                        "scale": "child__repeat_repeat_Horsepower_y",
+                        "field": "__count_start"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "axes": [
@@ -305,13 +357,31 @@
       },
       "marks": [
         {
-          "name": "child__repeat_repeat_Miles_per_Gallon_marks",
-          "type": "rect",
-          "style": ["bar"],
-          "from": {"data": "data_2"},
+          "type": "group",
+          "from": {
+            "facet": {
+              "data": "data_2",
+              "name": "stack_group_child__repeat_repeat_Miles_per_Gallon_main",
+              "groupby": "bin_maxbins_10_Miles_per_Gallon",
+              "aggregate": {
+                "fields": ["__count_start", "__count_end"],
+                "ops": ["min", "max"]
+              }
+            }
+          },
           "encode": {
             "update": {
-              "fill": {"scale": "color", "field": "Origin"},
+              "clip": {"value": true},
+              "x": [
+                {
+                  "test": "!isValid(datum[\"bin_maxbins_10_Miles_per_Gallon\"]) || !isFinite(+datum[\"bin_maxbins_10_Miles_per_Gallon\"])",
+                  "value": 0
+                },
+                {
+                  "scale": "child__repeat_repeat_Miles_per_Gallon_x",
+                  "field": "bin_maxbins_10_Miles_per_Gallon_end"
+                }
+              ],
               "x2": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Miles_per_Gallon\"]) || !isFinite(+datum[\"bin_maxbins_10_Miles_per_Gallon\"])",
@@ -323,26 +393,60 @@
                   "offset": 1
                 }
               ],
-              "x": [
-                {
-                  "test": "!isValid(datum[\"bin_maxbins_10_Miles_per_Gallon\"]) || !isFinite(+datum[\"bin_maxbins_10_Miles_per_Gallon\"])",
-                  "value": 0
-                },
-                {
-                  "scale": "child__repeat_repeat_Miles_per_Gallon_x",
-                  "field": "bin_maxbins_10_Miles_per_Gallon_end"
-                }
-              ],
               "y": {
-                "scale": "child__repeat_repeat_Miles_per_Gallon_y",
-                "field": "__count_end"
+                "signal": "scale(\"child__repeat_repeat_Miles_per_Gallon_y\", datum[\"max___count_end\"])"
               },
               "y2": {
-                "scale": "child__repeat_repeat_Miles_per_Gallon_y",
-                "field": "__count_start"
+                "signal": "scale(\"child__repeat_repeat_Miles_per_Gallon_y\", datum[\"min___count_start\"])"
               }
             }
-          }
+          },
+          "marks": [
+            {
+              "type": "group",
+              "encode": {
+                "update": {
+                  "y": {
+                    "signal": "-scale(\"child__repeat_repeat_Miles_per_Gallon_y\", datum[\"max___count_end\"])"
+                  }
+                }
+              },
+              "marks": [
+                {
+                  "name": "child__repeat_repeat_Miles_per_Gallon_marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {
+                    "data": "stack_group_child__repeat_repeat_Miles_per_Gallon_main"
+                  },
+                  "encode": {
+                    "update": {
+                      "fill": {"scale": "color", "field": "Origin"},
+                      "x2": [
+                        {
+                          "test": "!isValid(datum[\"bin_maxbins_10_Miles_per_Gallon\"]) || !isFinite(+datum[\"bin_maxbins_10_Miles_per_Gallon\"])",
+                          "value": 0
+                        },
+                        {
+                          "scale": "child__repeat_repeat_Miles_per_Gallon_x",
+                          "field": "bin_maxbins_10_Miles_per_Gallon",
+                          "offset": 1
+                        }
+                      ],
+                      "y": {
+                        "scale": "child__repeat_repeat_Miles_per_Gallon_y",
+                        "field": "__count_end"
+                      },
+                      "y2": {
+                        "scale": "child__repeat_repeat_Miles_per_Gallon_y",
+                        "field": "__count_start"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "axes": [
@@ -389,13 +493,31 @@
       },
       "marks": [
         {
-          "name": "child__repeat_repeat_Acceleration_marks",
-          "type": "rect",
-          "style": ["bar"],
-          "from": {"data": "data_3"},
+          "type": "group",
+          "from": {
+            "facet": {
+              "data": "data_3",
+              "name": "stack_group_child__repeat_repeat_Acceleration_main",
+              "groupby": "bin_maxbins_10_Acceleration",
+              "aggregate": {
+                "fields": ["__count_start", "__count_end"],
+                "ops": ["min", "max"]
+              }
+            }
+          },
           "encode": {
             "update": {
-              "fill": {"scale": "color", "field": "Origin"},
+              "clip": {"value": true},
+              "x": [
+                {
+                  "test": "!isValid(datum[\"bin_maxbins_10_Acceleration\"]) || !isFinite(+datum[\"bin_maxbins_10_Acceleration\"])",
+                  "value": 0
+                },
+                {
+                  "scale": "child__repeat_repeat_Acceleration_x",
+                  "field": "bin_maxbins_10_Acceleration_end"
+                }
+              ],
               "x2": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Acceleration\"]) || !isFinite(+datum[\"bin_maxbins_10_Acceleration\"])",
@@ -407,26 +529,60 @@
                   "offset": 1
                 }
               ],
-              "x": [
-                {
-                  "test": "!isValid(datum[\"bin_maxbins_10_Acceleration\"]) || !isFinite(+datum[\"bin_maxbins_10_Acceleration\"])",
-                  "value": 0
-                },
-                {
-                  "scale": "child__repeat_repeat_Acceleration_x",
-                  "field": "bin_maxbins_10_Acceleration_end"
-                }
-              ],
               "y": {
-                "scale": "child__repeat_repeat_Acceleration_y",
-                "field": "__count_end"
+                "signal": "scale(\"child__repeat_repeat_Acceleration_y\", datum[\"max___count_end\"])"
               },
               "y2": {
-                "scale": "child__repeat_repeat_Acceleration_y",
-                "field": "__count_start"
+                "signal": "scale(\"child__repeat_repeat_Acceleration_y\", datum[\"min___count_start\"])"
               }
             }
-          }
+          },
+          "marks": [
+            {
+              "type": "group",
+              "encode": {
+                "update": {
+                  "y": {
+                    "signal": "-scale(\"child__repeat_repeat_Acceleration_y\", datum[\"max___count_end\"])"
+                  }
+                }
+              },
+              "marks": [
+                {
+                  "name": "child__repeat_repeat_Acceleration_marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {
+                    "data": "stack_group_child__repeat_repeat_Acceleration_main"
+                  },
+                  "encode": {
+                    "update": {
+                      "fill": {"scale": "color", "field": "Origin"},
+                      "x2": [
+                        {
+                          "test": "!isValid(datum[\"bin_maxbins_10_Acceleration\"]) || !isFinite(+datum[\"bin_maxbins_10_Acceleration\"])",
+                          "value": 0
+                        },
+                        {
+                          "scale": "child__repeat_repeat_Acceleration_x",
+                          "field": "bin_maxbins_10_Acceleration",
+                          "offset": 1
+                        }
+                      ],
+                      "y": {
+                        "scale": "child__repeat_repeat_Acceleration_y",
+                        "field": "__count_end"
+                      },
+                      "y2": {
+                        "scale": "child__repeat_repeat_Acceleration_y",
+                        "field": "__count_start"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "axes": [
@@ -473,13 +629,31 @@
       },
       "marks": [
         {
-          "name": "child__repeat_repeat_Displacement_marks",
-          "type": "rect",
-          "style": ["bar"],
-          "from": {"data": "data_0"},
+          "type": "group",
+          "from": {
+            "facet": {
+              "data": "data_0",
+              "name": "stack_group_child__repeat_repeat_Displacement_main",
+              "groupby": "bin_maxbins_10_Displacement",
+              "aggregate": {
+                "fields": ["__count_start", "__count_end"],
+                "ops": ["min", "max"]
+              }
+            }
+          },
           "encode": {
             "update": {
-              "fill": {"scale": "color", "field": "Origin"},
+              "clip": {"value": true},
+              "x": [
+                {
+                  "test": "!isValid(datum[\"bin_maxbins_10_Displacement\"]) || !isFinite(+datum[\"bin_maxbins_10_Displacement\"])",
+                  "value": 0
+                },
+                {
+                  "scale": "child__repeat_repeat_Displacement_x",
+                  "field": "bin_maxbins_10_Displacement_end"
+                }
+              ],
               "x2": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Displacement\"]) || !isFinite(+datum[\"bin_maxbins_10_Displacement\"])",
@@ -491,26 +665,60 @@
                   "offset": 1
                 }
               ],
-              "x": [
-                {
-                  "test": "!isValid(datum[\"bin_maxbins_10_Displacement\"]) || !isFinite(+datum[\"bin_maxbins_10_Displacement\"])",
-                  "value": 0
-                },
-                {
-                  "scale": "child__repeat_repeat_Displacement_x",
-                  "field": "bin_maxbins_10_Displacement_end"
-                }
-              ],
               "y": {
-                "scale": "child__repeat_repeat_Displacement_y",
-                "field": "__count_end"
+                "signal": "scale(\"child__repeat_repeat_Displacement_y\", datum[\"max___count_end\"])"
               },
               "y2": {
-                "scale": "child__repeat_repeat_Displacement_y",
-                "field": "__count_start"
+                "signal": "scale(\"child__repeat_repeat_Displacement_y\", datum[\"min___count_start\"])"
               }
             }
-          }
+          },
+          "marks": [
+            {
+              "type": "group",
+              "encode": {
+                "update": {
+                  "y": {
+                    "signal": "-scale(\"child__repeat_repeat_Displacement_y\", datum[\"max___count_end\"])"
+                  }
+                }
+              },
+              "marks": [
+                {
+                  "name": "child__repeat_repeat_Displacement_marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {
+                    "data": "stack_group_child__repeat_repeat_Displacement_main"
+                  },
+                  "encode": {
+                    "update": {
+                      "fill": {"scale": "color", "field": "Origin"},
+                      "x2": [
+                        {
+                          "test": "!isValid(datum[\"bin_maxbins_10_Displacement\"]) || !isFinite(+datum[\"bin_maxbins_10_Displacement\"])",
+                          "value": 0
+                        },
+                        {
+                          "scale": "child__repeat_repeat_Displacement_x",
+                          "field": "bin_maxbins_10_Displacement",
+                          "offset": 1
+                        }
+                      ],
+                      "y": {
+                        "scale": "child__repeat_repeat_Displacement_y",
+                        "field": "__count_end"
+                      },
+                      "y2": {
+                        "scale": "child__repeat_repeat_Displacement_y",
+                        "field": "__count_start"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "axes": [

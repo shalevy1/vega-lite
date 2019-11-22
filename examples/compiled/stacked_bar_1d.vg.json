@@ -32,19 +32,56 @@
   "signals": [{"name": "height", "update": "height"}],
   "marks": [
     {
-      "name": "marks",
-      "type": "rect",
-      "style": ["bar"],
-      "from": {"data": "source_0"},
+      "type": "group",
+      "from": {
+        "facet": {
+          "data": "source_0",
+          "name": "stack_group_main",
+          "aggregate": {
+            "fields": ["sum_Acceleration_start", "sum_Acceleration_end"],
+            "ops": ["min", "max"]
+          }
+        }
+      },
       "encode": {
         "update": {
-          "fill": {"scale": "color", "field": "Origin"},
-          "x": {"scale": "x", "field": "sum_Acceleration_end"},
-          "x2": {"scale": "x", "field": "sum_Acceleration_start"},
-          "yc": {"signal": "height", "mult": 0.5},
-          "height": {"value": 18}
+          "clip": {"value": true},
+          "height": {"value": 18},
+          "x": {
+            "signal": "scale(\"x\", datum[\"min_sum_Acceleration_start\"])"
+          },
+          "x2": {"signal": "scale(\"x\", datum[\"max_sum_Acceleration_end\"])"}
         }
-      }
+      },
+      "marks": [
+        {
+          "type": "group",
+          "encode": {
+            "update": {
+              "x": {
+                "signal": "-scale(\"x\", datum[\"min_sum_Acceleration_start\"])"
+              }
+            }
+          },
+          "marks": [
+            {
+              "name": "marks",
+              "type": "rect",
+              "style": ["bar"],
+              "from": {"data": "stack_group_main"},
+              "encode": {
+                "update": {
+                  "fill": {"scale": "color", "field": "Origin"},
+                  "x": {"scale": "x", "field": "sum_Acceleration_end"},
+                  "x2": {"scale": "x", "field": "sum_Acceleration_start"},
+                  "yc": {"signal": "height", "mult": 0.5},
+                  "height": {"value": 18}
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "scales": [
