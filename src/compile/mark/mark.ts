@@ -2,10 +2,10 @@ import {isArray} from 'vega-util';
 import {isFieldDef, isValueDef, vgField} from '../../channeldef';
 import {MAIN} from '../../data';
 import {isAggregate, pathGroupingFields} from '../../encoding';
-import {AREA, isPathMark, LINE, Mark, TRAIL} from '../../mark';
+import {AREA, isPathMark, LINE, Mark, TRAIL, BAR, RECT} from '../../mark';
 import {isSortByEncoding, isSortField} from '../../sort';
 import {contains, getFirstDefined, isNullOrFalse, keys} from '../../util';
-import {VgCompare} from '../../vega.schema';
+import {VgCompare, VgEncodeEntry} from '../../vega.schema';
 import {getMarkConfig, getStyles, sortParams} from '../common';
 import {UnitModel} from '../unit';
 import {area} from './area';
@@ -39,6 +39,8 @@ const markCompiler: {[m in Mark]: MarkCompiler} = {
 export function parseMarkGroups(model: UnitModel): any[] {
   if (contains([LINE, AREA, TRAIL], model.mark)) {
     return parsePathMark(model);
+  } else if (contains([BAR, RECT], model.mark)) {
+    return getStackGroups(model);
   } else {
     return getMarkGroups(model);
   }
@@ -80,6 +82,98 @@ function parsePathMark(model: UnitModel) {
     ];
   } else {
     return pathMarks;
+  }
+}
+
+const STACK_GROUP_PREFIX = 'stack_group_';
+
+function getStackGroups(model: UnitModel) {
+  if (model.stack) {
+    const [mark] = getMarkGroups(model, {fromPrefix: STACK_GROUP_PREFIX});
+    const groupEncode: VgEncodeEntry = {};
+    const innerGroupEncode: VgEncodeEntry = {};
+    const fieldScale = model.scaleName(model.stack.fieldChannel);
+    const exprWithScale = (variable: string) => {
+      return `scale(${JSON.stringify(fieldScale)}, datum[${JSON.stringify(variable)}])`;
+    };
+    if (model.stack.fieldChannel == 'x') {
+      if (mark.encode.update.y) {
+        groupEncode.y = mark.encode.update.y;
+        delete mark.encode.update.y;
+      }
+      if (mark.encode.update.y2) {
+        groupEncode.y2 = mark.encode.update.y2;
+      }
+      if (mark.encode.update.height) {
+        groupEncode.height = mark.encode.update.height;
+      }
+
+      groupEncode.x = {signal: exprWithScale(`min_${model.vgField(model.stack.fieldChannel)}_start`)};
+      groupEncode.x2 = {signal: exprWithScale(`max_${model.vgField(model.stack.fieldChannel)}_end`)};
+      innerGroupEncode.x = {signal: '-' + exprWithScale(`min_${model.vgField(model.stack.fieldChannel)}_start`)};
+    } else {
+      if (mark.encode.update.x) {
+        groupEncode.x = mark.encode.update.x;
+        delete mark.encode.update.x;
+      }
+      if (mark.encode.update.x2) {
+        groupEncode.x2 = mark.encode.update.x2;
+      }
+      if (mark.encode.update.width) {
+        groupEncode.width = mark.encode.update.width;
+      }
+      groupEncode.y = {signal: exprWithScale(`max_${model.vgField(model.stack.fieldChannel)}_end`)};
+      groupEncode.y2 = {signal: exprWithScale(`min_${model.vgField(model.stack.fieldChannel)}_start`)};
+      innerGroupEncode.y = {signal: '-' + exprWithScale(`max_${model.vgField(model.stack.fieldChannel)}_end`)};
+    }
+
+    for (const key of [
+      'cornerRadius',
+      'cornerRadiusTopLeft',
+      'cornerRadiusTopRight',
+      'cornerRadiusBottomLeft',
+      'cornerRadiusBottomRight'
+    ]) {
+      if (mark.encode.update[key]) {
+        groupEncode[key] = mark.encode.update[key];
+        delete mark.encode.update[key];
+      }
+    }
+
+    return [
+      {
+        type: 'group',
+        from: {
+          facet: {
+            data: model.requestDataName(MAIN),
+            name: STACK_GROUP_PREFIX + model.requestDataName(MAIN),
+            groupby: model.vgField(model.stack.groupbyChannel),
+            aggregate: {
+              fields: [
+                model.vgField(model.stack.fieldChannel) + '_start',
+                model.vgField(model.stack.fieldChannel) + '_end'
+              ],
+              ops: ['min', 'max']
+            }
+          }
+        },
+        encode: {
+          update: {
+            clip: {value: true},
+            ...groupEncode
+          }
+        },
+        marks: [
+          {
+            type: 'group',
+            encode: {update: innerGroupEncode},
+            marks: [mark]
+          }
+        ]
+      }
+    ];
+  } else {
+    return getMarkGroups(model);
   }
 }
 
