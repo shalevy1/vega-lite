@@ -101,7 +101,11 @@
                   "fill": {"scale": "color", "field": "gender"},
                   "x": {"scale": "x", "field": "sum_signed_people_end"},
                   "x2": {"scale": "x", "field": "sum_signed_people_start"},
-                  "height": {"field": {"group": "height"}}
+                  "height": {"field": {"group": "height"}},
+                  "cornerRadiusTopLeft": {"value": 0},
+                  "cornerRadiusTopRight": {"value": 0},
+                  "cornerRadiusBottomLeft": {"value": 0},
+                  "cornerRadiusBottomRight": {"value": 0}
                 }
               }
             }

@@ -89,7 +89,11 @@
                   "fill": {"scale": "color", "field": "c"},
                   "width": {"field": {"group": "width"}},
                   "y": {"scale": "y", "field": "b_end"},
-                  "y2": {"scale": "y", "field": "b_start"}
+                  "y2": {"scale": "y", "field": "b_start"},
+                  "cornerRadiusTopLeft": {"value": 0},
+                  "cornerRadiusTopRight": {"value": 0},
+                  "cornerRadiusBottomLeft": {"value": 0},
+                  "cornerRadiusBottomRight": {"value": 0}
                 }
               }
             }

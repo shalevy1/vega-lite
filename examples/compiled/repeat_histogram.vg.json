@@ -303,7 +303,11 @@
                         "scale": "child__repeat_repeat_Horsepower_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}}
+                      "width": {"field": {"group": "width"}},
+                      "cornerRadiusTopLeft": {"value": 0},
+                      "cornerRadiusTopRight": {"value": 0},
+                      "cornerRadiusBottomLeft": {"value": 0},
+                      "cornerRadiusBottomRight": {"value": 0}
                     }
                   }
                 }
@@ -438,7 +442,11 @@
                         "scale": "child__repeat_repeat_Miles_per_Gallon_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}}
+                      "width": {"field": {"group": "width"}},
+                      "cornerRadiusTopLeft": {"value": 0},
+                      "cornerRadiusTopRight": {"value": 0},
+                      "cornerRadiusBottomLeft": {"value": 0},
+                      "cornerRadiusBottomRight": {"value": 0}
                     }
                   }
                 }
@@ -573,7 +581,11 @@
                         "scale": "child__repeat_repeat_Acceleration_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}}
+                      "width": {"field": {"group": "width"}},
+                      "cornerRadiusTopLeft": {"value": 0},
+                      "cornerRadiusTopRight": {"value": 0},
+                      "cornerRadiusBottomLeft": {"value": 0},
+                      "cornerRadiusBottomRight": {"value": 0}
                     }
                   }
                 }
@@ -708,7 +720,11 @@
                         "scale": "child__repeat_repeat_Displacement_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}}
+                      "width": {"field": {"group": "width"}},
+                      "cornerRadiusTopLeft": {"value": 0},
+                      "cornerRadiusTopRight": {"value": 0},
+                      "cornerRadiusBottomLeft": {"value": 0},
+                      "cornerRadiusBottomRight": {"value": 0}
                     }
                   }
                 }
