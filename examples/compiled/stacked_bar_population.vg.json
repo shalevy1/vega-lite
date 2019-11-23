@@ -49,10 +49,15 @@
         "facet": {
           "data": "source_0",
           "name": "stack_group_main",
-          "groupby": "age",
+          "groupby": ["age"],
           "aggregate": {
-            "fields": ["sum_people_start", "sum_people_end"],
-            "ops": ["min", "max"]
+            "fields": [
+              "sum_people_start",
+              "sum_people_start",
+              "sum_people_end",
+              "sum_people_end"
+            ],
+            "ops": ["min", "max", "min", "max"]
           }
         }
       },
@@ -61,8 +66,12 @@
           "clip": {"value": true},
           "x": {"scale": "x", "field": "age"},
           "width": {"scale": "x", "band": true},
-          "y": {"signal": "scale(\"y\", datum[\"max_sum_people_end\"])"},
-          "y2": {"signal": "scale(\"y\", datum[\"min_sum_people_start\"])"}
+          "y": {
+            "signal": "min(scale('y',datum[\"min_sum_people_start\"]),scale('y',datum[\"max_sum_people_start\"]),scale('y',datum[\"min_sum_people_end\"]),scale('y',datum[\"max_sum_people_end\"]))"
+          },
+          "y2": {
+            "signal": "max(scale('y',datum[\"min_sum_people_start\"]),scale('y',datum[\"max_sum_people_start\"]),scale('y',datum[\"min_sum_people_end\"]),scale('y',datum[\"max_sum_people_end\"]))"
+          }
         }
       },
       "marks": [
@@ -70,7 +79,10 @@
           "type": "group",
           "encode": {
             "update": {
-              "y": {"signal": "-scale(\"y\", datum[\"max_sum_people_end\"])"}
+              "y": {
+                "signal": "-min(scale('y',parent[\"min_sum_people_start\"]),scale('y',parent[\"max_sum_people_start\"]),scale('y',parent[\"min_sum_people_end\"]),scale('y',parent[\"max_sum_people_end\"]))"
+              },
+              "width": {"field": {"group": "width"}}
             }
           },
           "marks": [
@@ -82,7 +94,7 @@
               "encode": {
                 "update": {
                   "fill": {"scale": "color", "field": "gender"},
-                  "width": {"scale": "x", "band": true},
+                  "width": {"field": {"group": "width"}},
                   "y": {"scale": "y", "field": "sum_people_end"},
                   "y2": {"scale": "y", "field": "sum_people_start"}
                 }

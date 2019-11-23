@@ -79,13 +79,15 @@
         "facet": {
           "data": "data_0",
           "name": "stack_group_main",
-          "groupby": "properties\\.variety",
+          "groupby": ["properties\\.variety"],
           "aggregate": {
             "fields": [
               "sum_properties\\.yield_start",
+              "sum_properties\\.yield_start",
+              "sum_properties\\.yield_end",
               "sum_properties\\.yield_end"
             ],
-            "ops": ["min", "max"]
+            "ops": ["min", "max", "min", "max"]
           }
         }
       },
@@ -95,10 +97,10 @@
           "y": {"scale": "y", "field": "properties\\.variety"},
           "height": {"scale": "y", "band": true},
           "x": {
-            "signal": "scale(\"x\", datum[\"min_sum_properties\\\\.yield_start\"])"
+            "signal": "min(scale('x',datum[\"min_sum_properties.yield_start\"]),scale('x',datum[\"max_sum_properties.yield_start\"]),scale('x',datum[\"min_sum_properties.yield_end\"]),scale('x',datum[\"max_sum_properties.yield_end\"]))"
           },
           "x2": {
-            "signal": "scale(\"x\", datum[\"max_sum_properties\\\\.yield_end\"])"
+            "signal": "max(scale('x',datum[\"min_sum_properties.yield_start\"]),scale('x',datum[\"max_sum_properties.yield_start\"]),scale('x',datum[\"min_sum_properties.yield_end\"]),scale('x',datum[\"max_sum_properties.yield_end\"]))"
           }
         }
       },
@@ -108,8 +110,9 @@
           "encode": {
             "update": {
               "x": {
-                "signal": "-scale(\"x\", datum[\"min_sum_properties\\\\.yield_start\"])"
-              }
+                "signal": "-min(scale('x',parent[\"min_sum_properties.yield_start\"]),scale('x',parent[\"max_sum_properties.yield_start\"]),scale('x',parent[\"min_sum_properties.yield_end\"]),scale('x',parent[\"max_sum_properties.yield_end\"]))"
+              },
+              "height": {"field": {"group": "height"}}
             }
           },
           "marks": [
@@ -123,7 +126,7 @@
                   "fill": {"scale": "color", "field": "properties\\.site"},
                   "x": {"scale": "x", "field": "sum_properties\\.yield_end"},
                   "x2": {"scale": "x", "field": "sum_properties\\.yield_start"},
-                  "height": {"scale": "y", "band": true}
+                  "height": {"field": {"group": "height"}}
                 }
               }
             }

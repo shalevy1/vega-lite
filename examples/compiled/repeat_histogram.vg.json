@@ -226,10 +226,18 @@
             "facet": {
               "data": "data_1",
               "name": "stack_group_child__repeat_repeat_Horsepower_main",
-              "groupby": "bin_maxbins_10_Horsepower",
+              "groupby": [
+                "bin_maxbins_10_Horsepower",
+                "bin_maxbins_10_Horsepower_end"
+              ],
               "aggregate": {
-                "fields": ["__count_start", "__count_end"],
-                "ops": ["min", "max"]
+                "fields": [
+                  "__count_start",
+                  "__count_start",
+                  "__count_end",
+                  "__count_end"
+                ],
+                "ops": ["min", "max", "min", "max"]
               }
             }
           },
@@ -258,10 +266,10 @@
                 }
               ],
               "y": {
-                "signal": "scale(\"child__repeat_repeat_Horsepower_y\", datum[\"max___count_end\"])"
+                "signal": "min(scale('child__repeat_repeat_Horsepower_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"max___count_end\"]))"
               },
               "y2": {
-                "signal": "scale(\"child__repeat_repeat_Horsepower_y\", datum[\"min___count_start\"])"
+                "signal": "max(scale('child__repeat_repeat_Horsepower_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"max___count_end\"]))"
               }
             }
           },
@@ -271,8 +279,9 @@
               "encode": {
                 "update": {
                   "y": {
-                    "signal": "-scale(\"child__repeat_repeat_Horsepower_y\", datum[\"max___count_end\"])"
-                  }
+                    "signal": "-min(scale('child__repeat_repeat_Horsepower_y',parent[\"min___count_start\"]),scale('child__repeat_repeat_Horsepower_y',parent[\"max___count_start\"]),scale('child__repeat_repeat_Horsepower_y',parent[\"min___count_end\"]),scale('child__repeat_repeat_Horsepower_y',parent[\"max___count_end\"]))"
+                  },
+                  "width": {"field": {"group": "width"}}
                 }
               },
               "marks": [
@@ -286,17 +295,6 @@
                   "encode": {
                     "update": {
                       "fill": {"scale": "color", "field": "Origin"},
-                      "x2": [
-                        {
-                          "test": "!isValid(datum[\"bin_maxbins_10_Horsepower\"]) || !isFinite(+datum[\"bin_maxbins_10_Horsepower\"])",
-                          "value": 0
-                        },
-                        {
-                          "scale": "child__repeat_repeat_Horsepower_x",
-                          "field": "bin_maxbins_10_Horsepower",
-                          "offset": 1
-                        }
-                      ],
                       "y": {
                         "scale": "child__repeat_repeat_Horsepower_y",
                         "field": "__count_end"
@@ -304,7 +302,8 @@
                       "y2": {
                         "scale": "child__repeat_repeat_Horsepower_y",
                         "field": "__count_start"
-                      }
+                      },
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }
@@ -362,10 +361,18 @@
             "facet": {
               "data": "data_2",
               "name": "stack_group_child__repeat_repeat_Miles_per_Gallon_main",
-              "groupby": "bin_maxbins_10_Miles_per_Gallon",
+              "groupby": [
+                "bin_maxbins_10_Miles_per_Gallon",
+                "bin_maxbins_10_Miles_per_Gallon_end"
+              ],
               "aggregate": {
-                "fields": ["__count_start", "__count_end"],
-                "ops": ["min", "max"]
+                "fields": [
+                  "__count_start",
+                  "__count_start",
+                  "__count_end",
+                  "__count_end"
+                ],
+                "ops": ["min", "max", "min", "max"]
               }
             }
           },
@@ -394,10 +401,10 @@
                 }
               ],
               "y": {
-                "signal": "scale(\"child__repeat_repeat_Miles_per_Gallon_y\", datum[\"max___count_end\"])"
+                "signal": "min(scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"max___count_end\"]))"
               },
               "y2": {
-                "signal": "scale(\"child__repeat_repeat_Miles_per_Gallon_y\", datum[\"min___count_start\"])"
+                "signal": "max(scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"max___count_end\"]))"
               }
             }
           },
@@ -407,8 +414,9 @@
               "encode": {
                 "update": {
                   "y": {
-                    "signal": "-scale(\"child__repeat_repeat_Miles_per_Gallon_y\", datum[\"max___count_end\"])"
-                  }
+                    "signal": "-min(scale('child__repeat_repeat_Miles_per_Gallon_y',parent[\"min___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',parent[\"max___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',parent[\"min___count_end\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',parent[\"max___count_end\"]))"
+                  },
+                  "width": {"field": {"group": "width"}}
                 }
               },
               "marks": [
@@ -422,17 +430,6 @@
                   "encode": {
                     "update": {
                       "fill": {"scale": "color", "field": "Origin"},
-                      "x2": [
-                        {
-                          "test": "!isValid(datum[\"bin_maxbins_10_Miles_per_Gallon\"]) || !isFinite(+datum[\"bin_maxbins_10_Miles_per_Gallon\"])",
-                          "value": 0
-                        },
-                        {
-                          "scale": "child__repeat_repeat_Miles_per_Gallon_x",
-                          "field": "bin_maxbins_10_Miles_per_Gallon",
-                          "offset": 1
-                        }
-                      ],
                       "y": {
                         "scale": "child__repeat_repeat_Miles_per_Gallon_y",
                         "field": "__count_end"
@@ -440,7 +437,8 @@
                       "y2": {
                         "scale": "child__repeat_repeat_Miles_per_Gallon_y",
                         "field": "__count_start"
-                      }
+                      },
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }
@@ -498,10 +496,18 @@
             "facet": {
               "data": "data_3",
               "name": "stack_group_child__repeat_repeat_Acceleration_main",
-              "groupby": "bin_maxbins_10_Acceleration",
+              "groupby": [
+                "bin_maxbins_10_Acceleration",
+                "bin_maxbins_10_Acceleration_end"
+              ],
               "aggregate": {
-                "fields": ["__count_start", "__count_end"],
-                "ops": ["min", "max"]
+                "fields": [
+                  "__count_start",
+                  "__count_start",
+                  "__count_end",
+                  "__count_end"
+                ],
+                "ops": ["min", "max", "min", "max"]
               }
             }
           },
@@ -530,10 +536,10 @@
                 }
               ],
               "y": {
-                "signal": "scale(\"child__repeat_repeat_Acceleration_y\", datum[\"max___count_end\"])"
+                "signal": "min(scale('child__repeat_repeat_Acceleration_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"max___count_end\"]))"
               },
               "y2": {
-                "signal": "scale(\"child__repeat_repeat_Acceleration_y\", datum[\"min___count_start\"])"
+                "signal": "max(scale('child__repeat_repeat_Acceleration_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"max___count_end\"]))"
               }
             }
           },
@@ -543,8 +549,9 @@
               "encode": {
                 "update": {
                   "y": {
-                    "signal": "-scale(\"child__repeat_repeat_Acceleration_y\", datum[\"max___count_end\"])"
-                  }
+                    "signal": "-min(scale('child__repeat_repeat_Acceleration_y',parent[\"min___count_start\"]),scale('child__repeat_repeat_Acceleration_y',parent[\"max___count_start\"]),scale('child__repeat_repeat_Acceleration_y',parent[\"min___count_end\"]),scale('child__repeat_repeat_Acceleration_y',parent[\"max___count_end\"]))"
+                  },
+                  "width": {"field": {"group": "width"}}
                 }
               },
               "marks": [
@@ -558,17 +565,6 @@
                   "encode": {
                     "update": {
                       "fill": {"scale": "color", "field": "Origin"},
-                      "x2": [
-                        {
-                          "test": "!isValid(datum[\"bin_maxbins_10_Acceleration\"]) || !isFinite(+datum[\"bin_maxbins_10_Acceleration\"])",
-                          "value": 0
-                        },
-                        {
-                          "scale": "child__repeat_repeat_Acceleration_x",
-                          "field": "bin_maxbins_10_Acceleration",
-                          "offset": 1
-                        }
-                      ],
                       "y": {
                         "scale": "child__repeat_repeat_Acceleration_y",
                         "field": "__count_end"
@@ -576,7 +572,8 @@
                       "y2": {
                         "scale": "child__repeat_repeat_Acceleration_y",
                         "field": "__count_start"
-                      }
+                      },
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }
@@ -634,10 +631,18 @@
             "facet": {
               "data": "data_0",
               "name": "stack_group_child__repeat_repeat_Displacement_main",
-              "groupby": "bin_maxbins_10_Displacement",
+              "groupby": [
+                "bin_maxbins_10_Displacement",
+                "bin_maxbins_10_Displacement_end"
+              ],
               "aggregate": {
-                "fields": ["__count_start", "__count_end"],
-                "ops": ["min", "max"]
+                "fields": [
+                  "__count_start",
+                  "__count_start",
+                  "__count_end",
+                  "__count_end"
+                ],
+                "ops": ["min", "max", "min", "max"]
               }
             }
           },
@@ -666,10 +671,10 @@
                 }
               ],
               "y": {
-                "signal": "scale(\"child__repeat_repeat_Displacement_y\", datum[\"max___count_end\"])"
+                "signal": "min(scale('child__repeat_repeat_Displacement_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Displacement_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Displacement_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Displacement_y',datum[\"max___count_end\"]))"
               },
               "y2": {
-                "signal": "scale(\"child__repeat_repeat_Displacement_y\", datum[\"min___count_start\"])"
+                "signal": "max(scale('child__repeat_repeat_Displacement_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Displacement_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Displacement_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Displacement_y',datum[\"max___count_end\"]))"
               }
             }
           },
@@ -679,8 +684,9 @@
               "encode": {
                 "update": {
                   "y": {
-                    "signal": "-scale(\"child__repeat_repeat_Displacement_y\", datum[\"max___count_end\"])"
-                  }
+                    "signal": "-min(scale('child__repeat_repeat_Displacement_y',parent[\"min___count_start\"]),scale('child__repeat_repeat_Displacement_y',parent[\"max___count_start\"]),scale('child__repeat_repeat_Displacement_y',parent[\"min___count_end\"]),scale('child__repeat_repeat_Displacement_y',parent[\"max___count_end\"]))"
+                  },
+                  "width": {"field": {"group": "width"}}
                 }
               },
               "marks": [
@@ -694,17 +700,6 @@
                   "encode": {
                     "update": {
                       "fill": {"scale": "color", "field": "Origin"},
-                      "x2": [
-                        {
-                          "test": "!isValid(datum[\"bin_maxbins_10_Displacement\"]) || !isFinite(+datum[\"bin_maxbins_10_Displacement\"])",
-                          "value": 0
-                        },
-                        {
-                          "scale": "child__repeat_repeat_Displacement_x",
-                          "field": "bin_maxbins_10_Displacement",
-                          "offset": 1
-                        }
-                      ],
                       "y": {
                         "scale": "child__repeat_repeat_Displacement_y",
                         "field": "__count_end"
@@ -712,7 +707,8 @@
                       "y2": {
                         "scale": "child__repeat_repeat_Displacement_y",
                         "field": "__count_start"
-                      }
+                      },
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }

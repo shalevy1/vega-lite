@@ -47,10 +47,15 @@
         "facet": {
           "data": "source_0",
           "name": "stack_group_main",
-          "groupby": "month_date",
+          "groupby": ["month_date"],
           "aggregate": {
-            "fields": ["__count_start", "__count_end"],
-            "ops": ["min", "max"]
+            "fields": [
+              "__count_start",
+              "__count_start",
+              "__count_end",
+              "__count_end"
+            ],
+            "ops": ["min", "max", "min", "max"]
           }
         }
       },
@@ -58,8 +63,12 @@
         "update": {
           "clip": {"value": true},
           "width": {"scale": "size", "field": "weather"},
-          "y": {"signal": "scale(\"y\", datum[\"max___count_end\"])"},
-          "y2": {"signal": "scale(\"y\", datum[\"min___count_start\"])"}
+          "y": {
+            "signal": "min(scale('y',datum[\"min___count_start\"]),scale('y',datum[\"max___count_start\"]),scale('y',datum[\"min___count_end\"]),scale('y',datum[\"max___count_end\"]))"
+          },
+          "y2": {
+            "signal": "max(scale('y',datum[\"min___count_start\"]),scale('y',datum[\"max___count_start\"]),scale('y',datum[\"min___count_end\"]),scale('y',datum[\"max___count_end\"]))"
+          }
         }
       },
       "marks": [
@@ -67,7 +76,10 @@
           "type": "group",
           "encode": {
             "update": {
-              "y": {"signal": "-scale(\"y\", datum[\"max___count_end\"])"}
+              "y": {
+                "signal": "-min(scale('y',parent[\"min___count_start\"]),scale('y',parent[\"max___count_start\"]),scale('y',parent[\"min___count_end\"]),scale('y',parent[\"max___count_end\"]))"
+              },
+              "width": {"field": {"group": "width"}}
             }
           },
           "marks": [
@@ -80,8 +92,7 @@
                 "update": {
                   "fill": {"value": "#4c78a8"},
                   "opacity": {"value": 0.5},
-                  "xc": {"scale": "x", "field": "month_date", "band": 0.5},
-                  "width": {"scale": "size", "field": "weather"},
+                  "width": {"field": {"group": "width"}},
                   "y": {"scale": "y", "field": "__count_end"},
                   "y2": {"scale": "y", "field": "__count_start"}
                 }

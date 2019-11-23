@@ -37,9 +37,15 @@
         "facet": {
           "data": "source_0",
           "name": "stack_group_main",
+          "groupby": [null],
           "aggregate": {
-            "fields": ["sum_Acceleration_start", "sum_Acceleration_end"],
-            "ops": ["min", "max"]
+            "fields": [
+              "sum_Acceleration_start",
+              "sum_Acceleration_start",
+              "sum_Acceleration_end",
+              "sum_Acceleration_end"
+            ],
+            "ops": ["min", "max", "min", "max"]
           }
         }
       },
@@ -48,9 +54,11 @@
           "clip": {"value": true},
           "height": {"value": 18},
           "x": {
-            "signal": "scale(\"x\", datum[\"min_sum_Acceleration_start\"])"
+            "signal": "min(scale('x',datum[\"min_sum_Acceleration_start\"]),scale('x',datum[\"max_sum_Acceleration_start\"]),scale('x',datum[\"min_sum_Acceleration_end\"]),scale('x',datum[\"max_sum_Acceleration_end\"]))"
           },
-          "x2": {"signal": "scale(\"x\", datum[\"max_sum_Acceleration_end\"])"}
+          "x2": {
+            "signal": "max(scale('x',datum[\"min_sum_Acceleration_start\"]),scale('x',datum[\"max_sum_Acceleration_start\"]),scale('x',datum[\"min_sum_Acceleration_end\"]),scale('x',datum[\"max_sum_Acceleration_end\"]))"
+          }
         }
       },
       "marks": [
@@ -59,8 +67,9 @@
           "encode": {
             "update": {
               "x": {
-                "signal": "-scale(\"x\", datum[\"min_sum_Acceleration_start\"])"
-              }
+                "signal": "-min(scale('x',parent[\"min_sum_Acceleration_start\"]),scale('x',parent[\"max_sum_Acceleration_start\"]),scale('x',parent[\"min_sum_Acceleration_end\"]),scale('x',parent[\"max_sum_Acceleration_end\"]))"
+              },
+              "height": {"field": {"group": "height"}}
             }
           },
           "marks": [
@@ -74,8 +83,7 @@
                   "fill": {"scale": "color", "field": "Origin"},
                   "x": {"scale": "x", "field": "sum_Acceleration_end"},
                   "x2": {"scale": "x", "field": "sum_Acceleration_start"},
-                  "yc": {"signal": "height", "mult": 0.5},
-                  "height": {"value": 18}
+                  "height": {"field": {"group": "height"}}
                 }
               }
             }

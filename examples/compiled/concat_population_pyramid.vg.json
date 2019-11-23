@@ -112,10 +112,15 @@
             "facet": {
               "data": "data_2",
               "name": "stack_group_concat_0_main",
-              "groupby": "age",
+              "groupby": ["age"],
               "aggregate": {
-                "fields": ["sum_people_start", "sum_people_end"],
-                "ops": ["min", "max"]
+                "fields": [
+                  "sum_people_start",
+                  "sum_people_start",
+                  "sum_people_end",
+                  "sum_people_end"
+                ],
+                "ops": ["min", "max", "min", "max"]
               }
             }
           },
@@ -125,10 +130,10 @@
               "y": {"scale": "concat_0_y", "field": "age"},
               "height": {"scale": "concat_0_y", "band": true},
               "x": {
-                "signal": "scale(\"concat_0_x\", datum[\"min_sum_people_start\"])"
+                "signal": "min(scale('concat_0_x',datum[\"min_sum_people_start\"]),scale('concat_0_x',datum[\"max_sum_people_start\"]),scale('concat_0_x',datum[\"min_sum_people_end\"]),scale('concat_0_x',datum[\"max_sum_people_end\"]))"
               },
               "x2": {
-                "signal": "scale(\"concat_0_x\", datum[\"max_sum_people_end\"])"
+                "signal": "max(scale('concat_0_x',datum[\"min_sum_people_start\"]),scale('concat_0_x',datum[\"max_sum_people_start\"]),scale('concat_0_x',datum[\"min_sum_people_end\"]),scale('concat_0_x',datum[\"max_sum_people_end\"]))"
               }
             }
           },
@@ -138,8 +143,9 @@
               "encode": {
                 "update": {
                   "x": {
-                    "signal": "-scale(\"concat_0_x\", datum[\"min_sum_people_start\"])"
-                  }
+                    "signal": "-min(scale('concat_0_x',parent[\"min_sum_people_start\"]),scale('concat_0_x',parent[\"max_sum_people_start\"]),scale('concat_0_x',parent[\"min_sum_people_end\"]),scale('concat_0_x',parent[\"max_sum_people_end\"]))"
+                  },
+                  "height": {"field": {"group": "height"}}
                 }
               },
               "marks": [
@@ -156,7 +162,7 @@
                         "scale": "concat_0_x",
                         "field": "sum_people_start"
                       },
-                      "height": {"scale": "concat_0_y", "band": true}
+                      "height": {"field": {"group": "height"}}
                     }
                   }
                 }
@@ -227,10 +233,15 @@
             "facet": {
               "data": "data_4",
               "name": "stack_group_concat_2_main",
-              "groupby": "age",
+              "groupby": ["age"],
               "aggregate": {
-                "fields": ["sum_people_start", "sum_people_end"],
-                "ops": ["min", "max"]
+                "fields": [
+                  "sum_people_start",
+                  "sum_people_start",
+                  "sum_people_end",
+                  "sum_people_end"
+                ],
+                "ops": ["min", "max", "min", "max"]
               }
             }
           },
@@ -240,10 +251,10 @@
               "y": {"scale": "concat_2_y", "field": "age"},
               "height": {"scale": "concat_2_y", "band": true},
               "x": {
-                "signal": "scale(\"concat_2_x\", datum[\"min_sum_people_start\"])"
+                "signal": "min(scale('concat_2_x',datum[\"min_sum_people_start\"]),scale('concat_2_x',datum[\"max_sum_people_start\"]),scale('concat_2_x',datum[\"min_sum_people_end\"]),scale('concat_2_x',datum[\"max_sum_people_end\"]))"
               },
               "x2": {
-                "signal": "scale(\"concat_2_x\", datum[\"max_sum_people_end\"])"
+                "signal": "max(scale('concat_2_x',datum[\"min_sum_people_start\"]),scale('concat_2_x',datum[\"max_sum_people_start\"]),scale('concat_2_x',datum[\"min_sum_people_end\"]),scale('concat_2_x',datum[\"max_sum_people_end\"]))"
               }
             }
           },
@@ -253,8 +264,9 @@
               "encode": {
                 "update": {
                   "x": {
-                    "signal": "-scale(\"concat_2_x\", datum[\"min_sum_people_start\"])"
-                  }
+                    "signal": "-min(scale('concat_2_x',parent[\"min_sum_people_start\"]),scale('concat_2_x',parent[\"max_sum_people_start\"]),scale('concat_2_x',parent[\"min_sum_people_end\"]),scale('concat_2_x',parent[\"max_sum_people_end\"]))"
+                  },
+                  "height": {"field": {"group": "height"}}
                 }
               },
               "marks": [
@@ -271,7 +283,7 @@
                         "scale": "concat_2_x",
                         "field": "sum_people_start"
                       },
-                      "height": {"scale": "concat_2_y", "band": true}
+                      "height": {"field": {"group": "height"}}
                     }
                   }
                 }

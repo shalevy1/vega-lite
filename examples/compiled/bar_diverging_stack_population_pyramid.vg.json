@@ -54,10 +54,15 @@
         "facet": {
           "data": "data_0",
           "name": "stack_group_main",
-          "groupby": "age",
+          "groupby": ["age"],
           "aggregate": {
-            "fields": ["sum_signed_people_start", "sum_signed_people_end"],
-            "ops": ["min", "max"]
+            "fields": [
+              "sum_signed_people_start",
+              "sum_signed_people_start",
+              "sum_signed_people_end",
+              "sum_signed_people_end"
+            ],
+            "ops": ["min", "max", "min", "max"]
           }
         }
       },
@@ -67,9 +72,11 @@
           "y": {"scale": "y", "field": "age"},
           "height": {"scale": "y", "band": true},
           "x": {
-            "signal": "scale(\"x\", datum[\"min_sum_signed_people_start\"])"
+            "signal": "min(scale('x',datum[\"min_sum_signed_people_start\"]),scale('x',datum[\"max_sum_signed_people_start\"]),scale('x',datum[\"min_sum_signed_people_end\"]),scale('x',datum[\"max_sum_signed_people_end\"]))"
           },
-          "x2": {"signal": "scale(\"x\", datum[\"max_sum_signed_people_end\"])"}
+          "x2": {
+            "signal": "max(scale('x',datum[\"min_sum_signed_people_start\"]),scale('x',datum[\"max_sum_signed_people_start\"]),scale('x',datum[\"min_sum_signed_people_end\"]),scale('x',datum[\"max_sum_signed_people_end\"]))"
+          }
         }
       },
       "marks": [
@@ -78,8 +85,9 @@
           "encode": {
             "update": {
               "x": {
-                "signal": "-scale(\"x\", datum[\"min_sum_signed_people_start\"])"
-              }
+                "signal": "-min(scale('x',parent[\"min_sum_signed_people_start\"]),scale('x',parent[\"max_sum_signed_people_start\"]),scale('x',parent[\"min_sum_signed_people_end\"]),scale('x',parent[\"max_sum_signed_people_end\"]))"
+              },
+              "height": {"field": {"group": "height"}}
             }
           },
           "marks": [
@@ -93,7 +101,7 @@
                   "fill": {"scale": "color", "field": "gender"},
                   "x": {"scale": "x", "field": "sum_signed_people_end"},
                   "x2": {"scale": "x", "field": "sum_signed_people_start"},
-                  "height": {"scale": "y", "band": true}
+                  "height": {"field": {"group": "height"}}
                 }
               }
             }

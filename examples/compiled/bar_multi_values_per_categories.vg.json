@@ -56,8 +56,11 @@
         "facet": {
           "data": "data_0",
           "name": "stack_group_main",
-          "groupby": "a",
-          "aggregate": {"fields": ["b_start", "b_end"], "ops": ["min", "max"]}
+          "groupby": ["a"],
+          "aggregate": {
+            "fields": ["b_start", "b_start", "b_end", "b_end"],
+            "ops": ["min", "max", "min", "max"]
+          }
         }
       },
       "encode": {
@@ -65,15 +68,24 @@
           "clip": {"value": true},
           "x": {"scale": "x", "field": "a"},
           "width": {"scale": "x", "band": true},
-          "y": {"signal": "scale(\"y\", datum[\"max_b_end\"])"},
-          "y2": {"signal": "scale(\"y\", datum[\"min_b_start\"])"}
+          "y": {
+            "signal": "min(scale('y',datum[\"min_b_start\"]),scale('y',datum[\"max_b_start\"]),scale('y',datum[\"min_b_end\"]),scale('y',datum[\"max_b_end\"]))"
+          },
+          "y2": {
+            "signal": "max(scale('y',datum[\"min_b_start\"]),scale('y',datum[\"max_b_start\"]),scale('y',datum[\"min_b_end\"]),scale('y',datum[\"max_b_end\"]))"
+          }
         }
       },
       "marks": [
         {
           "type": "group",
           "encode": {
-            "update": {"y": {"signal": "-scale(\"y\", datum[\"max_b_end\"])"}}
+            "update": {
+              "y": {
+                "signal": "-min(scale('y',parent[\"min_b_start\"]),scale('y',parent[\"max_b_start\"]),scale('y',parent[\"min_b_end\"]),scale('y',parent[\"max_b_end\"]))"
+              },
+              "width": {"field": {"group": "width"}}
+            }
           },
           "marks": [
             {
@@ -85,7 +97,7 @@
                 "update": {
                   "fill": {"value": "steelblue"},
                   "stroke": {"value": "white"},
-                  "width": {"scale": "x", "band": true},
+                  "width": {"field": {"group": "width"}},
                   "y": {"scale": "y", "field": "b_end"},
                   "y2": {"scale": "y", "field": "b_start"}
                 }
