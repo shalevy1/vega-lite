@@ -1,11 +1,11 @@
 import {isArray} from 'vega-util';
-import {isFieldDef, isValueDef, vgField} from '../../channeldef';
+import {isFieldDef, isValueDef, vgField, FieldRefOption} from '../../channeldef';
 import {MAIN} from '../../data';
 import {isAggregate, pathGroupingFields} from '../../encoding';
 import {AREA, isPathMark, LINE, Mark, TRAIL, BAR, RECT} from '../../mark';
 import {isSortByEncoding, isSortField} from '../../sort';
-import {contains, getFirstDefined, isNullOrFalse, keys} from '../../util';
-import {VgCompare, VgEncodeEntry} from '../../vega.schema';
+import {contains, getFirstDefined, isNullOrFalse, keys, omit, pick} from '../../util';
+import {VgCompare, VgEncodeEntry, VgEncodeChannel} from '../../vega.schema';
 import {getMarkConfig, getStyles, sortParams} from '../common';
 import {UnitModel} from '../unit';
 import {area} from './area';
@@ -90,54 +90,69 @@ const STACK_GROUP_PREFIX = 'stack_group_';
 function getStackGroups(model: UnitModel) {
   if (model.stack) {
     const [mark] = getMarkGroups(model, {fromPrefix: STACK_GROUP_PREFIX});
-    const groupEncode: VgEncodeEntry = {};
-    const innerGroupEncode: VgEncodeEntry = {};
     const fieldScale = model.scaleName(model.stack.fieldChannel);
-    const exprWithScale = (variable: string) => {
-      return `scale(${JSON.stringify(fieldScale)}, datum[${JSON.stringify(variable)}])`;
-    };
-    if (model.stack.fieldChannel == 'x') {
-      if (mark.encode.update.y) {
-        groupEncode.y = mark.encode.update.y;
-        delete mark.encode.update.y;
-      }
-      if (mark.encode.update.y2) {
-        groupEncode.y2 = mark.encode.update.y2;
-      }
-      if (mark.encode.update.height) {
-        groupEncode.height = mark.encode.update.height;
-      }
 
-      groupEncode.x = {signal: exprWithScale(`min_${model.vgField(model.stack.fieldChannel)}_start`)};
-      groupEncode.x2 = {signal: exprWithScale(`max_${model.vgField(model.stack.fieldChannel)}_end`)};
-      innerGroupEncode.x = {signal: '-' + exprWithScale(`min_${model.vgField(model.stack.fieldChannel)}_start`)};
+    const stackField = (opt: FieldRefOption = {}) => model.vgField(model.stack.fieldChannel, opt);
+    const stackFieldGroup = (func: 'min' | 'max', opt: FieldRefOption) => {
+      const vgFieldMinMax = [
+        stackField({prefix: 'min', suffix: 'start', ...opt}),
+        stackField({prefix: 'max', suffix: 'start', ...opt}),
+        stackField({prefix: 'min', suffix: 'end', ...opt}),
+        stackField({prefix: 'max', suffix: 'end', ...opt})
+      ];
+      return func + '(' + vgFieldMinMax.map(field => `scale('${fieldScale}',${field})`).join(',') + ')';
+    };
+
+    let groupEncode: VgEncodeEntry;
+    let innerGroupEncode: VgEncodeEntry;
+
+    if (model.stack.fieldChannel == 'x') {
+      groupEncode = {
+        ...pick(mark.encode.update, ['y', 'y2', 'height']),
+        x: {signal: stackFieldGroup('min', {expr: 'datum'})},
+        x2: {signal: stackFieldGroup('max', {expr: 'datum'})}
+      };
+      innerGroupEncode = {
+        x: {signal: '-' + stackFieldGroup('min', {expr: 'parent'})},
+        height: {field: {group: 'height'}}
+      };
+      mark.encode.update = {
+        ...omit(mark.encode.update, ['y', 'yc', 'y2']),
+        height: {field: {group: 'height'}}
+      };
     } else {
-      if (mark.encode.update.x) {
-        groupEncode.x = mark.encode.update.x;
-        delete mark.encode.update.x;
-      }
-      if (mark.encode.update.x2) {
-        groupEncode.x2 = mark.encode.update.x2;
-      }
-      if (mark.encode.update.width) {
-        groupEncode.width = mark.encode.update.width;
-      }
-      groupEncode.y = {signal: exprWithScale(`max_${model.vgField(model.stack.fieldChannel)}_end`)};
-      groupEncode.y2 = {signal: exprWithScale(`min_${model.vgField(model.stack.fieldChannel)}_start`)};
-      innerGroupEncode.y = {signal: '-' + exprWithScale(`max_${model.vgField(model.stack.fieldChannel)}_end`)};
+      groupEncode = {
+        ...pick(mark.encode.update, ['x', 'x2', 'width']),
+        y: {signal: stackFieldGroup('min', {expr: 'datum'})},
+        y2: {signal: stackFieldGroup('max', {expr: 'datum'})}
+      };
+      innerGroupEncode = {
+        y: {signal: '-' + stackFieldGroup('min', {expr: 'parent'})},
+        width: {field: {group: 'width'}}
+      };
+      mark.encode.update = {
+        ...omit(mark.encode.update, ['x', 'xc', 'x2']),
+        width: {field: {group: 'width'}}
+      };
     }
 
-    for (const key of [
+    const cornerRadiusChannels: VgEncodeChannel[] = [
       'cornerRadius',
       'cornerRadiusTopLeft',
       'cornerRadiusTopRight',
       'cornerRadiusBottomLeft',
       'cornerRadiusBottomRight'
-    ]) {
-      if (mark.encode.update[key]) {
-        groupEncode[key] = mark.encode.update[key];
-        delete mark.encode.update[key];
-      }
+    ];
+    groupEncode = {
+      ...groupEncode,
+      ...pick(mark.encode.update, cornerRadiusChannels)
+    };
+    mark.encode.update = omit(mark.encode.update, cornerRadiusChannels);
+
+    // For bin we have to add bin channels.
+    let additionalGroupbys: string[] = [];
+    if (model.fieldDef(model.stack.groupbyChannel) && model.fieldDef(model.stack.groupbyChannel).bin) {
+      additionalGroupbys = [model.vgField(model.stack.groupbyChannel, {binSuffix: 'end'})];
     }
 
     return [
@@ -147,13 +162,15 @@ function getStackGroups(model: UnitModel) {
           facet: {
             data: model.requestDataName(MAIN),
             name: STACK_GROUP_PREFIX + model.requestDataName(MAIN),
-            groupby: model.vgField(model.stack.groupbyChannel),
+            groupby: [model.vgField(model.stack.groupbyChannel), ...additionalGroupbys],
             aggregate: {
               fields: [
-                model.vgField(model.stack.fieldChannel) + '_start',
-                model.vgField(model.stack.fieldChannel) + '_end'
+                stackField({suffix: 'start'}),
+                stackField({suffix: 'start'}),
+                stackField({suffix: 'end'}),
+                stackField({suffix: 'end'})
               ],
-              ops: ['min', 'max']
+              ops: ['min', 'max', 'min', 'max']
             }
           }
         },

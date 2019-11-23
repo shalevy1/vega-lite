@@ -127,8 +127,9 @@ describe('Mark', () => {
       });
       it('should use main stacked data source', () => {
         const markGroup = parseMarkGroups(model);
-        expect(markGroup[0].from.data).toBe('main');
-        expect(markGroup[0].style).toEqual(['bar']);
+        expect(markGroup[0].from).toHaveProperty('facet');
+        expect(markGroup[0].from.facet.data).toBe('main');
+        expect(markGroup[0].type).toEqual('group');
       });
       it('should not have post encoding transform', () => {
         const markGroup = parseMarkGroups(model);
@@ -155,7 +156,8 @@ describe('Mark', () => {
         model.parseLayoutSize();
 
         const markGroup = parseMarkGroups(model.child as UnitModel);
-        expect(markGroup[0].from.data).toBe('child_main');
+        expect(markGroup[0].from).toHaveProperty('facet');
+        expect(markGroup[0].from.facet.data).toBe('child_main');
       });
 
       it('should not have post encoding transform', () => {
