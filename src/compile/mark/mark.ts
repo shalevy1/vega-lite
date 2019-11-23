@@ -88,7 +88,8 @@ function parsePathMark(model: UnitModel) {
 const STACK_GROUP_PREFIX = 'stack_group_';
 
 function getStackGroups(model: UnitModel) {
-  if (model.stack) {
+  // Use groups for stacked bar/rects, don't use if size is encoded.
+  if (model.stack && !model.fieldDef('size')) {
     const [mark] = getMarkGroups(model, {fromPrefix: STACK_GROUP_PREFIX});
     const fieldScale = model.scaleName(model.stack.fieldChannel);
 
@@ -108,7 +109,7 @@ function getStackGroups(model: UnitModel) {
 
     if (model.stack.fieldChannel == 'x') {
       groupEncode = {
-        ...pick(mark.encode.update, ['y', 'y2', 'height']),
+        ...pick(mark.encode.update, ['y', 'yc', 'y2', 'height']),
         x: {signal: stackFieldGroup('min', {expr: 'datum'})},
         x2: {signal: stackFieldGroup('max', {expr: 'datum'})}
       };
@@ -122,7 +123,7 @@ function getStackGroups(model: UnitModel) {
       };
     } else {
       groupEncode = {
-        ...pick(mark.encode.update, ['x', 'x2', 'width']),
+        ...pick(mark.encode.update, ['x', 'xc', 'x2', 'width']),
         y: {signal: stackFieldGroup('min', {expr: 'datum'})},
         y2: {signal: stackFieldGroup('max', {expr: 'datum'})}
       };
@@ -150,9 +151,11 @@ function getStackGroups(model: UnitModel) {
     mark.encode.update = omit(mark.encode.update, cornerRadiusChannels);
 
     // For bin we have to add bin channels.
-    let additionalGroupbys: string[] = [];
+    const groupby: string[] = model.vgField(model.stack.groupbyChannel)
+      ? [model.vgField(model.stack.groupbyChannel)]
+      : [];
     if (model.fieldDef(model.stack.groupbyChannel) && model.fieldDef(model.stack.groupbyChannel).bin) {
-      additionalGroupbys = [model.vgField(model.stack.groupbyChannel, {binSuffix: 'end'})];
+      groupby.push(model.vgField(model.stack.groupbyChannel, {binSuffix: 'end'}));
     }
 
     return [
@@ -162,7 +165,7 @@ function getStackGroups(model: UnitModel) {
           facet: {
             data: model.requestDataName(MAIN),
             name: STACK_GROUP_PREFIX + model.requestDataName(MAIN),
-            groupby: [model.vgField(model.stack.groupbyChannel), ...additionalGroupbys],
+            groupby,
             aggregate: {
               fields: [
                 stackField({suffix: 'start'}),
