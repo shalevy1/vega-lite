@@ -1,11 +1,11 @@
 import {isArray} from 'vega-util';
-import {isFieldDef, isValueDef, vgField, FieldRefOption} from '../../channeldef';
+import {FieldRefOption, isFieldDef, isValueDef, vgField} from '../../channeldef';
 import {MAIN} from '../../data';
 import {isAggregate, pathGroupingFields} from '../../encoding';
-import {AREA, isPathMark, LINE, Mark, TRAIL, BAR, RECT} from '../../mark';
+import {AREA, BAR, isPathMark, LINE, Mark, RECT, TRAIL} from '../../mark';
 import {isSortByEncoding, isSortField} from '../../sort';
 import {contains, getFirstDefined, isNullOrFalse, keys, omit, pick} from '../../util';
-import {VgCompare, VgEncodeEntry, VgEncodeChannel} from '../../vega.schema';
+import {VgCompare, VgEncodeChannel, VgEncodeEntry} from '../../vega.schema';
 import {getMarkConfig, getStyles, sortParams} from '../common';
 import {UnitModel} from '../unit';
 import {area} from './area';
@@ -148,7 +148,13 @@ function getStackGroups(model: UnitModel) {
       ...groupEncode,
       ...pick(mark.encode.update, cornerRadiusChannels)
     };
-    mark.encode.update = omit(mark.encode.update, cornerRadiusChannels);
+    mark.encode.update = {
+      ...mark.encode.update,
+      cornerRadiusTopLeft: {value: 0},
+      cornerRadiusTopRight: {value: 0},
+      cornerRadiusBottomLeft: {value: 0},
+      cornerRadiusBottomRight: {value: 0}
+    };
 
     // For bin we have to add bin channels.
     const groupby: string[] = model.vgField(model.stack.groupbyChannel)

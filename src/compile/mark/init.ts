@@ -56,6 +56,15 @@ export function normalizeMarkDef(
     markDef.cursor = cursor(markDef, encoding, config);
   }
 
+  // set corner radius
+  markDef.cornerRadius = markDef.cornerRadius ?? getMarkConfig('cornerRadius', markDef, config);
+  markDef.cornerRadiusTopLeft = markDef.cornerRadiusTopLeft ?? getMarkConfig('cornerRadiusTopLeft', markDef, config);
+  markDef.cornerRadiusTopRight = markDef.cornerRadiusTopRight ?? getMarkConfig('cornerRadiusTopRight', markDef, config);
+  markDef.cornerRadiusBottomLeft =
+    markDef.cornerRadiusBottomLeft ?? getMarkConfig('cornerRadiusBottomLeft', markDef, config);
+  markDef.cornerRadiusBottomRight =
+    markDef.cornerRadiusBottomRight ?? getMarkConfig('cornerRadiusBottomRight', markDef, config);
+
   return markDef;
 }
 
