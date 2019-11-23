@@ -23,6 +23,7 @@ import {
 import {QUANTITATIVE, TEMPORAL} from '../../type';
 import {contains, getFirstDefined} from '../../util';
 import {getMarkConfig} from '../common';
+import {VG_CORNERRADIUS_CHANNELS} from '../../vega.schema';
 
 export function normalizeMarkDef(
   mark: Mark | MarkDef,
@@ -57,13 +58,11 @@ export function normalizeMarkDef(
   }
 
   // set corner radius
-  markDef.cornerRadius = markDef.cornerRadius ?? getMarkConfig('cornerRadius', markDef, config);
-  markDef.cornerRadiusTopLeft = markDef.cornerRadiusTopLeft ?? getMarkConfig('cornerRadiusTopLeft', markDef, config);
-  markDef.cornerRadiusTopRight = markDef.cornerRadiusTopRight ?? getMarkConfig('cornerRadiusTopRight', markDef, config);
-  markDef.cornerRadiusBottomLeft =
-    markDef.cornerRadiusBottomLeft ?? getMarkConfig('cornerRadiusBottomLeft', markDef, config);
-  markDef.cornerRadiusBottomRight =
-    markDef.cornerRadiusBottomRight ?? getMarkConfig('cornerRadiusBottomRight', markDef, config);
+  if (markDef.type == 'bar') {
+    for (const prop of VG_CORNERRADIUS_CHANNELS) {
+      markDef[prop] = markDef[prop] ?? getMarkConfig(prop, markDef, config);
+    }
+  }
 
   return markDef;
 }

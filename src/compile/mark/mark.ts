@@ -2,10 +2,10 @@ import {isArray} from 'vega-util';
 import {FieldRefOption, isFieldDef, isValueDef, vgField} from '../../channeldef';
 import {MAIN} from '../../data';
 import {isAggregate, pathGroupingFields} from '../../encoding';
-import {AREA, BAR, isPathMark, LINE, Mark, RECT, TRAIL} from '../../mark';
+import {AREA, BAR, isPathMark, LINE, Mark, TRAIL} from '../../mark';
 import {isSortByEncoding, isSortField} from '../../sort';
 import {contains, getFirstDefined, isNullOrFalse, keys, omit, pick} from '../../util';
-import {VgCompare, VgEncodeChannel, VgEncodeEntry} from '../../vega.schema';
+import {VgCompare, VgEncodeEntry, VG_CORNERRADIUS_CHANNELS} from '../../vega.schema';
 import {getMarkConfig, getStyles, sortParams} from '../common';
 import {UnitModel} from '../unit';
 import {area} from './area';
@@ -39,7 +39,7 @@ const markCompiler: {[m in Mark]: MarkCompiler} = {
 export function parseMarkGroups(model: UnitModel): any[] {
   if (contains([LINE, AREA, TRAIL], model.mark)) {
     return parsePathMark(model);
-  } else if (contains([BAR, RECT], model.mark)) {
+  } else if (contains([BAR], model.mark)) {
     return getStackGroups(model);
   } else {
     return getMarkGroups(model);
@@ -137,16 +137,9 @@ function getStackGroups(model: UnitModel) {
       };
     }
 
-    const cornerRadiusChannels: VgEncodeChannel[] = [
-      'cornerRadius',
-      'cornerRadiusTopLeft',
-      'cornerRadiusTopRight',
-      'cornerRadiusBottomLeft',
-      'cornerRadiusBottomRight'
-    ];
     groupEncode = {
       ...groupEncode,
-      ...pick(mark.encode.update, cornerRadiusChannels)
+      ...pick(mark.encode.update, VG_CORNERRADIUS_CHANNELS)
     };
     mark.encode.update = {
       ...mark.encode.update,

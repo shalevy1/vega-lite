@@ -759,6 +759,15 @@ const VG_MARK_CONFIG_INDEX: Flag<keyof BaseMarkConfig> = {
 
 export const VG_MARK_CONFIGS = keys(VG_MARK_CONFIG_INDEX);
 
+// Vega's cornerRadius channels.
+export const VG_CORNERRADIUS_CHANNELS = keys({
+  cornerRadius: 1,
+  cornerRadiusTopLeft: 1,
+  cornerRadiusTopRight: 1,
+  cornerRadiusBottomLeft: 1,
+  cornerRadiusBottomRight: 1
+});
+
 export interface VgComparator {
   field?: string | string[];
   order?: SortOrder | SortOrder[];
