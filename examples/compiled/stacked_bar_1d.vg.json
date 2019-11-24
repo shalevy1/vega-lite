@@ -85,6 +85,7 @@
                   "x": {"scale": "x", "field": "sum_Acceleration_end"},
                   "x2": {"scale": "x", "field": "sum_Acceleration_start"},
                   "height": {"field": {"group": "height"}},
+                  "cornerRadius": {"value": 0},
                   "cornerRadiusTopLeft": {"value": 0},
                   "cornerRadiusTopRight": {"value": 0},
                   "cornerRadiusBottomLeft": {"value": 0},

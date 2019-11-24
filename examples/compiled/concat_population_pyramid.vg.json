@@ -163,6 +163,7 @@
                         "field": "sum_people_start"
                       },
                       "height": {"field": {"group": "height"}},
+                      "cornerRadius": {"value": 0},
                       "cornerRadiusTopLeft": {"value": 0},
                       "cornerRadiusTopRight": {"value": 0},
                       "cornerRadiusBottomLeft": {"value": 0},
@@ -288,6 +289,7 @@
                         "field": "sum_people_start"
                       },
                       "height": {"field": {"group": "height"}},
+                      "cornerRadius": {"value": 0},
                       "cornerRadiusTopLeft": {"value": 0},
                       "cornerRadiusTopRight": {"value": 0},
                       "cornerRadiusBottomLeft": {"value": 0},

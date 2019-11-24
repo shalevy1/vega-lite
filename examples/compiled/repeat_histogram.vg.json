@@ -304,6 +304,7 @@
                         "field": "__count_start"
                       },
                       "width": {"field": {"group": "width"}},
+                      "cornerRadius": {"value": 0},
                       "cornerRadiusTopLeft": {"value": 0},
                       "cornerRadiusTopRight": {"value": 0},
                       "cornerRadiusBottomLeft": {"value": 0},
@@ -443,6 +444,7 @@
                         "field": "__count_start"
                       },
                       "width": {"field": {"group": "width"}},
+                      "cornerRadius": {"value": 0},
                       "cornerRadiusTopLeft": {"value": 0},
                       "cornerRadiusTopRight": {"value": 0},
                       "cornerRadiusBottomLeft": {"value": 0},
@@ -582,6 +584,7 @@
                         "field": "__count_start"
                       },
                       "width": {"field": {"group": "width"}},
+                      "cornerRadius": {"value": 0},
                       "cornerRadiusTopLeft": {"value": 0},
                       "cornerRadiusTopRight": {"value": 0},
                       "cornerRadiusBottomLeft": {"value": 0},
@@ -721,6 +724,7 @@
                         "field": "__count_start"
                       },
                       "width": {"field": {"group": "width"}},
+                      "cornerRadius": {"value": 0},
                       "cornerRadiusTopLeft": {"value": 0},
                       "cornerRadiusTopRight": {"value": 0},
                       "cornerRadiusBottomLeft": {"value": 0},
