@@ -56,7 +56,6 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "x": {"scale": "x", "field": "a"},
           "width": {"scale": "x", "band": true},
           "y": {
@@ -64,7 +63,8 @@
           },
           "y2": {
             "signal": "max(scale('y',datum[\"min_b_start\"]),scale('y',datum[\"max_b_start\"]),scale('y',datum[\"min_b_end\"]),scale('y',datum[\"max_b_end\"]))"
-          }
+          },
+          "clip": {"value": true}
         }
       },
       "marks": [

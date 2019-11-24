@@ -93,7 +93,6 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "y": {"scale": "y", "field": "properties\\.variety"},
           "height": {"scale": "y", "band": true},
           "x": {
@@ -101,7 +100,8 @@
           },
           "x2": {
             "signal": "max(scale('x',datum[\"min_sum_properties.yield_start\"]),scale('x',datum[\"max_sum_properties.yield_start\"]),scale('x',datum[\"min_sum_properties.yield_end\"]),scale('x',datum[\"max_sum_properties.yield_end\"]))"
-          }
+          },
+          "clip": {"value": true}
         }
       },
       "marks": [

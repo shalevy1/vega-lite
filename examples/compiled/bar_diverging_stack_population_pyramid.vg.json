@@ -68,7 +68,6 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "y": {"scale": "y", "field": "age"},
           "height": {"scale": "y", "band": true},
           "x": {
@@ -76,7 +75,8 @@
           },
           "x2": {
             "signal": "max(scale('x',datum[\"min_sum_signed_people_start\"]),scale('x',datum[\"max_sum_signed_people_start\"]),scale('x',datum[\"min_sum_signed_people_end\"]),scale('x',datum[\"max_sum_signed_people_end\"]))"
-          }
+          },
+          "clip": {"value": true}
         }
       },
       "marks": [

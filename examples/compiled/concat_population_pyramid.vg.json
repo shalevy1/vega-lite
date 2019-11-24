@@ -126,7 +126,6 @@
           },
           "encode": {
             "update": {
-              "clip": {"value": true},
               "y": {"scale": "concat_0_y", "field": "age"},
               "height": {"scale": "concat_0_y", "band": true},
               "x": {
@@ -134,7 +133,8 @@
               },
               "x2": {
                 "signal": "max(scale('concat_0_x',datum[\"min_sum_people_start\"]),scale('concat_0_x',datum[\"max_sum_people_start\"]),scale('concat_0_x',datum[\"min_sum_people_end\"]),scale('concat_0_x',datum[\"max_sum_people_end\"]))"
-              }
+              },
+              "clip": {"value": true}
             }
           },
           "marks": [
@@ -247,7 +247,6 @@
           },
           "encode": {
             "update": {
-              "clip": {"value": true},
               "y": {"scale": "concat_2_y", "field": "age"},
               "height": {"scale": "concat_2_y", "band": true},
               "x": {
@@ -255,7 +254,8 @@
               },
               "x2": {
                 "signal": "max(scale('concat_2_x',datum[\"min_sum_people_start\"]),scale('concat_2_x',datum[\"max_sum_people_start\"]),scale('concat_2_x',datum[\"min_sum_people_end\"]),scale('concat_2_x',datum[\"max_sum_people_end\"]))"
-              }
+              },
+              "clip": {"value": true}
             }
           },
           "marks": [

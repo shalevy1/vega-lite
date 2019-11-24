@@ -243,7 +243,6 @@
           },
           "encode": {
             "update": {
-              "clip": {"value": true},
               "x": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Horsepower\"]) || !isFinite(+datum[\"bin_maxbins_10_Horsepower\"])",
@@ -270,7 +269,8 @@
               },
               "y2": {
                 "signal": "max(scale('child__repeat_repeat_Horsepower_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Horsepower_y',datum[\"max___count_end\"]))"
-              }
+              },
+              "clip": {"value": true}
             }
           },
           "marks": [
@@ -378,7 +378,6 @@
           },
           "encode": {
             "update": {
-              "clip": {"value": true},
               "x": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Miles_per_Gallon\"]) || !isFinite(+datum[\"bin_maxbins_10_Miles_per_Gallon\"])",
@@ -405,7 +404,8 @@
               },
               "y2": {
                 "signal": "max(scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Miles_per_Gallon_y',datum[\"max___count_end\"]))"
-              }
+              },
+              "clip": {"value": true}
             }
           },
           "marks": [
@@ -513,7 +513,6 @@
           },
           "encode": {
             "update": {
-              "clip": {"value": true},
               "x": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Acceleration\"]) || !isFinite(+datum[\"bin_maxbins_10_Acceleration\"])",
@@ -540,7 +539,8 @@
               },
               "y2": {
                 "signal": "max(scale('child__repeat_repeat_Acceleration_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Acceleration_y',datum[\"max___count_end\"]))"
-              }
+              },
+              "clip": {"value": true}
             }
           },
           "marks": [
@@ -648,7 +648,6 @@
           },
           "encode": {
             "update": {
-              "clip": {"value": true},
               "x": [
                 {
                   "test": "!isValid(datum[\"bin_maxbins_10_Displacement\"]) || !isFinite(+datum[\"bin_maxbins_10_Displacement\"])",
@@ -675,7 +674,8 @@
               },
               "y2": {
                 "signal": "max(scale('child__repeat_repeat_Displacement_y',datum[\"min___count_start\"]),scale('child__repeat_repeat_Displacement_y',datum[\"max___count_start\"]),scale('child__repeat_repeat_Displacement_y',datum[\"min___count_end\"]),scale('child__repeat_repeat_Displacement_y',datum[\"max___count_end\"]))"
-              }
+              },
+              "clip": {"value": true}
             }
           },
           "marks": [

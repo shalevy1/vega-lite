@@ -56,7 +56,6 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "y": {"scale": "y", "field": "variety"},
           "height": {"scale": "y", "band": true},
           "x": {
@@ -64,7 +63,8 @@
           },
           "x2": {
             "signal": "max(scale('x',datum[\"min_sum_yield_start\"]),scale('x',datum[\"max_sum_yield_start\"]),scale('x',datum[\"min_sum_yield_end\"]),scale('x',datum[\"max_sum_yield_end\"]))"
-          }
+          },
+          "clip": {"value": true}
         }
       },
       "marks": [

@@ -67,7 +67,6 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "x": {"scale": "x", "field": "age"},
           "width": {"scale": "x", "band": true},
           "y": {
@@ -75,7 +74,8 @@
           },
           "y2": {
             "signal": "max(scale('y',datum[\"min_sum_people_start\"]),scale('y',datum[\"max_sum_people_start\"]),scale('y',datum[\"min_sum_people_end\"]),scale('y',datum[\"max_sum_people_end\"]))"
-          }
+          },
+          "clip": {"value": true}
         }
       },
       "marks": [

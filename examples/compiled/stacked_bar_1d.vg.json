@@ -51,7 +51,6 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "yc": {"signal": "height", "mult": 0.5},
           "height": {"value": 18},
           "x": {
@@ -59,7 +58,8 @@
           },
           "x2": {
             "signal": "max(scale('x',datum[\"min_sum_Acceleration_start\"]),scale('x',datum[\"max_sum_Acceleration_start\"]),scale('x',datum[\"min_sum_Acceleration_end\"]),scale('x',datum[\"max_sum_Acceleration_end\"]))"
-          }
+          },
+          "clip": {"value": true}
         }
       },
       "marks": [

@@ -62,10 +62,8 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "x": {"scale": "x", "field": "month_date"},
           "width": {"scale": "x", "band": true},
-          "stroke": {"value": "black"},
           "cornerRadius": {"value": 10},
           "y": {
             "signal": "min(scale('y',datum[\"min___count_start\"]),scale('y',datum[\"max___count_start\"]),scale('y',datum[\"min___count_end\"]),scale('y',datum[\"max___count_end\"]))"
@@ -80,29 +78,54 @@
           "type": "group",
           "encode": {
             "update": {
-              "y": {
-                "signal": "-min(scale('y',parent[\"min___count_start\"]),scale('y',parent[\"max___count_start\"]),scale('y',parent[\"min___count_end\"]),scale('y',parent[\"max___count_end\"]))"
-              },
-              "width": {"field": {"group": "width"}}
+              "width": {"field": {"group": "width"}},
+              "height": {"field": {"group": "height"}},
+              "cornerRadius": {"value": 10},
+              "clip": {"value": true}
             }
           },
           "marks": [
             {
-              "name": "marks",
-              "type": "rect",
-              "style": ["bar"],
-              "from": {"data": "stack_group_main"},
+              "type": "group",
               "encode": {
                 "update": {
-                  "stroke": {"value": "black"},
-                  "fill": {"scale": "color", "field": "weather"},
-                  "width": {"field": {"group": "width"}},
-                  "y": {"scale": "y", "field": "__count_end"},
-                  "y2": {"scale": "y", "field": "__count_start"}
+                  "y": {
+                    "signal": "-min(scale('y',parent[\"min___count_start\"]),scale('y',parent[\"max___count_start\"]),scale('y',parent[\"min___count_end\"]),scale('y',parent[\"max___count_end\"]))"
+                  },
+                  "width": {"field": {"group": "width"}}
                 }
-              }
+              },
+              "marks": [
+                {
+                  "name": "marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {"data": "stack_group_main"},
+                  "encode": {
+                    "update": {
+                      "stroke": {"value": "black"},
+                      "fill": {"scale": "color", "field": "weather"},
+                      "width": {"field": {"group": "width"}},
+                      "y": {"scale": "y", "field": "__count_end"},
+                      "y2": {"scale": "y", "field": "__count_start"}
+                    }
+                  }
+                }
+              ]
             }
           ]
+        },
+        {
+          "type": "rect",
+          "encode": {
+            "update": {
+              "width": {"field": {"group": "width"}},
+              "height": {"field": {"group": "height"}},
+              "cornerRadius": {"value": 10},
+              "stroke": {"value": "black"},
+              "fill": {"value": null}
+            }
+          }
         }
       ]
     }

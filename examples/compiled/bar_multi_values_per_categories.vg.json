@@ -65,10 +65,8 @@
       },
       "encode": {
         "update": {
-          "clip": {"value": true},
           "x": {"scale": "x", "field": "a"},
           "width": {"scale": "x", "band": true},
-          "stroke": {"value": "white"},
           "y": {
             "signal": "min(scale('y',datum[\"min_b_start\"]),scale('y',datum[\"max_b_start\"]),scale('y',datum[\"min_b_end\"]),scale('y',datum[\"max_b_end\"]))"
           },
@@ -82,29 +80,52 @@
           "type": "group",
           "encode": {
             "update": {
-              "y": {
-                "signal": "-min(scale('y',parent[\"min_b_start\"]),scale('y',parent[\"max_b_start\"]),scale('y',parent[\"min_b_end\"]),scale('y',parent[\"max_b_end\"]))"
-              },
-              "width": {"field": {"group": "width"}}
+              "width": {"field": {"group": "width"}},
+              "height": {"field": {"group": "height"}},
+              "clip": {"value": true}
             }
           },
           "marks": [
             {
-              "name": "marks",
-              "type": "rect",
-              "style": ["bar"],
-              "from": {"data": "stack_group_main"},
+              "type": "group",
               "encode": {
                 "update": {
-                  "fill": {"value": "steelblue"},
-                  "stroke": {"value": "white"},
-                  "width": {"field": {"group": "width"}},
-                  "y": {"scale": "y", "field": "b_end"},
-                  "y2": {"scale": "y", "field": "b_start"}
+                  "y": {
+                    "signal": "-min(scale('y',parent[\"min_b_start\"]),scale('y',parent[\"max_b_start\"]),scale('y',parent[\"min_b_end\"]),scale('y',parent[\"max_b_end\"]))"
+                  },
+                  "width": {"field": {"group": "width"}}
                 }
-              }
+              },
+              "marks": [
+                {
+                  "name": "marks",
+                  "type": "rect",
+                  "style": ["bar"],
+                  "from": {"data": "stack_group_main"},
+                  "encode": {
+                    "update": {
+                      "fill": {"value": "steelblue"},
+                      "stroke": {"value": "white"},
+                      "width": {"field": {"group": "width"}},
+                      "y": {"scale": "y", "field": "b_end"},
+                      "y2": {"scale": "y", "field": "b_start"}
+                    }
+                  }
+                }
+              ]
             }
           ]
+        },
+        {
+          "type": "rect",
+          "encode": {
+            "update": {
+              "width": {"field": {"group": "width"}},
+              "height": {"field": {"group": "height"}},
+              "stroke": {"value": "white"},
+              "fill": {"value": null}
+            }
+          }
         }
       ]
     }
