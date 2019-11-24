@@ -191,7 +191,11 @@ function getStackGroups(model: UnitModel) {
       ...resolveAsEncoding('stroke'),
       ...resolveAsEncoding('strokeWidth'),
       ...resolveAsEncoding('strokeJoin'),
-      ...resolveAsEncoding('strokeCap')
+      ...resolveAsEncoding('strokeCap'),
+      ...resolveAsEncoding('strokeDash'),
+      ...resolveAsEncoding('strokeDashOffet'),
+      ...resolveAsEncoding('strokeMiterLimit'),
+      ...resolveAsEncoding('strokeOpacity')
     };
     // (end temporary code)
 
