@@ -100,6 +100,7 @@
                   "width": {"field": {"group": "width"}},
                   "y": {"scale": "y", "field": "b_end"},
                   "y2": {"scale": "y", "field": "b_start"},
+                  "cornerRadius": {"value": 0},
                   "cornerRadiusTopLeft": {"value": 0},
                   "cornerRadiusTopRight": {"value": 0},
                   "cornerRadiusBottomLeft": {"value": 0},
