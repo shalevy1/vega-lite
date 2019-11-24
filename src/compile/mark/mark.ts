@@ -2,7 +2,7 @@ import {isArray} from 'vega-util';
 import {FieldRefOption, isFieldDef, isValueDef, vgField} from '../../channeldef';
 import {MAIN} from '../../data';
 import {isAggregate, pathGroupingFields} from '../../encoding';
-import {AREA, BAR, isPathMark, LINE, Mark, TRAIL} from '../../mark';
+import {AREA, BAR, isPathMark, LINE, Mark, TRAIL, MarkConfig} from '../../mark';
 import {isSortByEncoding, isSortField} from '../../sort';
 import {contains, getFirstDefined, isNullOrFalse, keys, omit, pick} from '../../util';
 import {VgCompare, VgEncodeEntry, VG_CORNERRADIUS_CHANNELS} from '../../vega.schema';
@@ -169,8 +169,6 @@ function getStackGroups(model: UnitModel) {
       groupby.push(model.vgField(model.stack.groupbyChannel, {binSuffix: 'end'}));
     }
 
-    // Temporary code to fix the stroke for stacked bars.
-    // When Vega fixes https://github.com/vega/vega/issues/2186, we can remove this.
     let marks: any = [
       {
         type: 'group',
@@ -178,9 +176,17 @@ function getStackGroups(model: UnitModel) {
         marks: [mark]
       }
     ];
-    const resolveAsEncoding = (prop: string) => {
-      const def =
-        mark.encode.update[prop] ?? (model.config[mark.type][prop] ? {value: model.config[mark.type][prop]} : null);
+
+    // Temporary code to fix the stroke for stacked bars.
+    // When Vega fixes https://github.com/vega/vega/issues/2186, we can remove this.
+    const resolveAsEncoding = (prop: keyof MarkConfig) => {
+      let def = mark.encode.update[prop];
+      if (!def) {
+        const c = getMarkConfig(prop, model.markDef, model.config);
+        if (c) {
+          def = {value: c};
+        }
+      }
       if (def) {
         return {[prop]: def};
       } else {
@@ -193,12 +199,10 @@ function getStackGroups(model: UnitModel) {
       ...resolveAsEncoding('strokeJoin'),
       ...resolveAsEncoding('strokeCap'),
       ...resolveAsEncoding('strokeDash'),
-      ...resolveAsEncoding('strokeDashOffet'),
+      ...resolveAsEncoding('strokeDashOffset'),
       ...resolveAsEncoding('strokeMiterLimit'),
       ...resolveAsEncoding('strokeOpacity')
     };
-    // (end temporary code)
-
     if (groupStroke.stroke) {
       groupEncode = omit(groupEncode, ['clip']);
       marks = [
@@ -228,6 +232,7 @@ function getStackGroups(model: UnitModel) {
         }
       ];
     }
+    // (end temporary code)
 
     return [
       {
@@ -249,9 +254,7 @@ function getStackGroups(model: UnitModel) {
           }
         },
         encode: {
-          update: {
-            ...groupEncode
-          }
+          update: groupEncode
         },
         marks: marks
       }
