@@ -120,7 +120,7 @@ function getStackGroups(model: UnitModel) {
       // Move cornerRadius, y/yc/y2/height properties to group
       // Group x/x2 should be the min/max of the marks within
       groupEncode = {
-        ...pick(mark.encode.update, ['y', 'yc', 'y2', 'height', ...VG_CORNERRADIUS_CHANNELS]),
+        ...pick(mark.encode.update, ['y', 'yc', 'y2', 'height', 'stroke', ...VG_CORNERRADIUS_CHANNELS]),
         x: {signal: stackFieldGroup('min', 'datum')},
         x2: {signal: stackFieldGroup('max', 'datum')}
       };
@@ -138,7 +138,7 @@ function getStackGroups(model: UnitModel) {
       };
     } else {
       groupEncode = {
-        ...pick(mark.encode.update, ['x', 'xc', 'x2', 'width', ...VG_CORNERRADIUS_CHANNELS]),
+        ...pick(mark.encode.update, ['x', 'xc', 'x2', 'width', 'stroke', ...VG_CORNERRADIUS_CHANNELS]),
         y: {signal: stackFieldGroup('min', 'datum')},
         y2: {signal: stackFieldGroup('max', 'datum')}
       };
