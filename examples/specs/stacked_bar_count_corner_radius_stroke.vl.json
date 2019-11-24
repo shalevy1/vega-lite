@@ -6,5 +6,6 @@
     "x": {"timeUnit": "month", "field": "date", "type": "ordinal"},
     "y": {"aggregate": "count", "field": "*", "type": "quantitative"},
     "color": {"field": "weather", "type": "nominal"}
-  }
+  },
+  "config": {"bar": {"strokeWidth": 2}}
 }

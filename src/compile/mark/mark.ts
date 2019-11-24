@@ -2,9 +2,9 @@ import {isArray} from 'vega-util';
 import {FieldRefOption, isFieldDef, isValueDef, vgField} from '../../channeldef';
 import {MAIN} from '../../data';
 import {isAggregate, pathGroupingFields} from '../../encoding';
-import {AREA, BAR, isPathMark, LINE, Mark, TRAIL, MarkConfig} from '../../mark';
+import {AREA, BAR, isPathMark, LINE, Mark, MarkConfig, TRAIL} from '../../mark';
 import {isSortByEncoding, isSortField} from '../../sort';
-import {contains, getFirstDefined, isNullOrFalse, keys, omit, pick} from '../../util';
+import {contains, duplicate, getFirstDefined, isNullOrFalse, keys, omit, pick} from '../../util';
 import {VgCompare, VgEncodeEntry, VG_CORNERRADIUS_CHANNELS} from '../../vega.schema';
 import {getMarkConfig, getStyles, sortParams} from '../common';
 import {UnitModel} from '../unit';
@@ -169,11 +169,35 @@ function getStackGroups(model: UnitModel) {
       groupby.push(model.vgField(model.stack.groupbyChannel, {binSuffix: 'end'}));
     }
 
-    let marks: any = [
+    const result: any = [
       {
         type: 'group',
-        encode: {update: innerGroupEncode},
-        marks: [mark]
+        from: {
+          facet: {
+            data: model.requestDataName(MAIN),
+            name: STACK_GROUP_PREFIX + model.requestDataName(MAIN),
+            groupby,
+            aggregate: {
+              fields: [
+                stackField({suffix: 'start'}),
+                stackField({suffix: 'start'}),
+                stackField({suffix: 'end'}),
+                stackField({suffix: 'end'})
+              ],
+              ops: ['min', 'max', 'min', 'max']
+            }
+          }
+        },
+        encode: {
+          update: groupEncode
+        },
+        marks: [
+          {
+            type: 'group',
+            encode: {update: innerGroupEncode},
+            marks: [mark]
+          }
+        ]
       }
     ];
 
@@ -204,20 +228,10 @@ function getStackGroups(model: UnitModel) {
       ...resolveAsEncoding('strokeOpacity')
     };
     if (groupStroke.stroke) {
-      groupEncode = omit(groupEncode, ['clip']);
-      marks = [
-        {
-          type: 'group',
-          encode: {
-            update: {
-              width: {field: {group: 'width'}},
-              height: {field: {group: 'height'}},
-              ...pick(groupEncode, VG_CORNERRADIUS_CHANNELS),
-              clip: {value: true}
-            }
-          },
-          marks
-        },
+      const strokeOverlay = duplicate(result[0]);
+      strokeOverlay.from.facet.name += '_copy';
+      delete strokeOverlay.encode.update.clip;
+      strokeOverlay.marks = [
         {
           type: 'rect',
           encode: {
@@ -231,34 +245,11 @@ function getStackGroups(model: UnitModel) {
           }
         }
       ];
+      result.push(strokeOverlay);
     }
     // (end temporary code)
 
-    return [
-      {
-        type: 'group',
-        from: {
-          facet: {
-            data: model.requestDataName(MAIN),
-            name: STACK_GROUP_PREFIX + model.requestDataName(MAIN),
-            groupby,
-            aggregate: {
-              fields: [
-                stackField({suffix: 'start'}),
-                stackField({suffix: 'start'}),
-                stackField({suffix: 'end'}),
-                stackField({suffix: 'end'})
-              ],
-              ops: ['min', 'max', 'min', 'max']
-            }
-          }
-        },
-        encode: {
-          update: groupEncode
-        },
-        marks: marks
-      }
-    ];
+    return result;
   } else {
     return getMarkGroups(model);
   }
