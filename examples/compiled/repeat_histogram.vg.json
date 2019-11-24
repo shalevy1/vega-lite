@@ -303,12 +303,7 @@
                         "scale": "child__repeat_repeat_Horsepower_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}},
-                      "cornerRadius": {"value": 0},
-                      "cornerRadiusTopLeft": {"value": 0},
-                      "cornerRadiusTopRight": {"value": 0},
-                      "cornerRadiusBottomLeft": {"value": 0},
-                      "cornerRadiusBottomRight": {"value": 0}
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }
@@ -443,12 +438,7 @@
                         "scale": "child__repeat_repeat_Miles_per_Gallon_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}},
-                      "cornerRadius": {"value": 0},
-                      "cornerRadiusTopLeft": {"value": 0},
-                      "cornerRadiusTopRight": {"value": 0},
-                      "cornerRadiusBottomLeft": {"value": 0},
-                      "cornerRadiusBottomRight": {"value": 0}
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }
@@ -583,12 +573,7 @@
                         "scale": "child__repeat_repeat_Acceleration_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}},
-                      "cornerRadius": {"value": 0},
-                      "cornerRadiusTopLeft": {"value": 0},
-                      "cornerRadiusTopRight": {"value": 0},
-                      "cornerRadiusBottomLeft": {"value": 0},
-                      "cornerRadiusBottomRight": {"value": 0}
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }
@@ -723,12 +708,7 @@
                         "scale": "child__repeat_repeat_Displacement_y",
                         "field": "__count_start"
                       },
-                      "width": {"field": {"group": "width"}},
-                      "cornerRadius": {"value": 0},
-                      "cornerRadiusTopLeft": {"value": 0},
-                      "cornerRadiusTopRight": {"value": 0},
-                      "cornerRadiusBottomLeft": {"value": 0},
-                      "cornerRadiusBottomRight": {"value": 0}
+                      "width": {"field": {"group": "width"}}
                     }
                   }
                 }

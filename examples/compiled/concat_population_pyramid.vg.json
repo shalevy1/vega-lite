@@ -162,12 +162,7 @@
                         "scale": "concat_0_x",
                         "field": "sum_people_start"
                       },
-                      "height": {"field": {"group": "height"}},
-                      "cornerRadius": {"value": 0},
-                      "cornerRadiusTopLeft": {"value": 0},
-                      "cornerRadiusTopRight": {"value": 0},
-                      "cornerRadiusBottomLeft": {"value": 0},
-                      "cornerRadiusBottomRight": {"value": 0}
+                      "height": {"field": {"group": "height"}}
                     }
                   }
                 }
@@ -288,12 +283,7 @@
                         "scale": "concat_2_x",
                         "field": "sum_people_start"
                       },
-                      "height": {"field": {"group": "height"}},
-                      "cornerRadius": {"value": 0},
-                      "cornerRadiusTopLeft": {"value": 0},
-                      "cornerRadiusTopRight": {"value": 0},
-                      "cornerRadiusBottomLeft": {"value": 0},
-                      "cornerRadiusBottomRight": {"value": 0}
+                      "height": {"field": {"group": "height"}}
                     }
                   }
                 }

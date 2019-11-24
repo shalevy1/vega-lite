@@ -126,12 +126,7 @@
                   "fill": {"scale": "color", "field": "properties\\.site"},
                   "x": {"scale": "x", "field": "sum_properties\\.yield_end"},
                   "x2": {"scale": "x", "field": "sum_properties\\.yield_start"},
-                  "height": {"field": {"group": "height"}},
-                  "cornerRadius": {"value": 0},
-                  "cornerRadiusTopLeft": {"value": 0},
-                  "cornerRadiusTopRight": {"value": 0},
-                  "cornerRadiusBottomLeft": {"value": 0},
-                  "cornerRadiusBottomRight": {"value": 0}
+                  "height": {"field": {"group": "height"}}
                 }
               }
             }
