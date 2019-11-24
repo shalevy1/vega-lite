@@ -87,73 +87,83 @@ function parsePathMark(model: UnitModel) {
 
 const STACK_GROUP_PREFIX = 'stack_group_';
 
+/**
+ * We need to put stacked bars into groups in order to enable cornerRadius for stacks.
+ * If stack is used and the model doesn't have size encoding, we put the mark into groups,
+ * and apply cornerRadius properties at the group level.
+ */
 function getStackGroups(model: UnitModel) {
-  // Use groups for stacked bar/rects, don't use if size is encoded.
+  // Activate groups if stack is used and the model doesn't have size encoding
   if (model.stack && !model.fieldDef('size')) {
+    // Generate the mark
     const [mark] = getMarkGroups(model, {fromPrefix: STACK_GROUP_PREFIX});
-    const fieldScale = model.scaleName(model.stack.fieldChannel);
 
+    // Get the scale for the stacked field
+    const fieldScale = model.scaleName(model.stack.fieldChannel);
     const stackField = (opt: FieldRefOption = {}) => model.vgField(model.stack.fieldChannel, opt);
-    const stackFieldGroup = (func: 'min' | 'max', opt: FieldRefOption) => {
+    // Find the min/max of the pixel value on the stacked direction
+    const stackFieldGroup = (func: 'min' | 'max', expr: 'datum' | 'parent') => {
       const vgFieldMinMax = [
-        stackField({prefix: 'min', suffix: 'start', ...opt}),
-        stackField({prefix: 'max', suffix: 'start', ...opt}),
-        stackField({prefix: 'min', suffix: 'end', ...opt}),
-        stackField({prefix: 'max', suffix: 'end', ...opt})
+        stackField({prefix: 'min', suffix: 'start', expr}),
+        stackField({prefix: 'max', suffix: 'start', expr}),
+        stackField({prefix: 'min', suffix: 'end', expr}),
+        stackField({prefix: 'max', suffix: 'end', expr})
       ];
-      return func + '(' + vgFieldMinMax.map(field => `scale('${fieldScale}',${field})`).join(',') + ')';
+      return `${func}(${vgFieldMinMax.map(field => `scale('${fieldScale}',${field})`).join(',')})`;
     };
 
     let groupEncode: VgEncodeEntry;
     let innerGroupEncode: VgEncodeEntry;
 
+    // Build the encoding for group and an inner group
     if (model.stack.fieldChannel == 'x') {
+      // Move cornerRadius, y/yc/y2/height properties to group
+      // Group x/x2 should be the min/max of the marks within
       groupEncode = {
-        ...pick(mark.encode.update, ['y', 'yc', 'y2', 'height']),
-        x: {signal: stackFieldGroup('min', {expr: 'datum'})},
-        x2: {signal: stackFieldGroup('max', {expr: 'datum'})}
+        ...pick(mark.encode.update, ['y', 'yc', 'y2', 'height', ...VG_CORNERRADIUS_CHANNELS]),
+        x: {signal: stackFieldGroup('min', 'datum')},
+        x2: {signal: stackFieldGroup('max', 'datum')}
       };
+      // Inner group should revert the x translation, and pass height through
       innerGroupEncode = {
-        x: {signal: '-' + stackFieldGroup('min', {expr: 'parent'})},
+        x: {signal: '-' + stackFieldGroup('min', 'parent')},
         height: {field: {group: 'height'}}
       };
+      // The marks should use the same height as group, without y/yc/y2 properties (because it's already done by group)
+      // This is why size encoding is not supported yet
+      // Corner radius properties should also be removed from marks
       mark.encode.update = {
-        ...omit(mark.encode.update, ['y', 'yc', 'y2']),
+        ...omit(mark.encode.update, ['y', 'yc', 'y2', ...VG_CORNERRADIUS_CHANNELS]),
         height: {field: {group: 'height'}}
       };
     } else {
       groupEncode = {
-        ...pick(mark.encode.update, ['x', 'xc', 'x2', 'width']),
-        y: {signal: stackFieldGroup('min', {expr: 'datum'})},
-        y2: {signal: stackFieldGroup('max', {expr: 'datum'})}
+        ...pick(mark.encode.update, ['x', 'xc', 'x2', 'width', ...VG_CORNERRADIUS_CHANNELS]),
+        y: {signal: stackFieldGroup('min', 'datum')},
+        y2: {signal: stackFieldGroup('max', 'datum')}
       };
       innerGroupEncode = {
-        y: {signal: '-' + stackFieldGroup('min', {expr: 'parent'})},
+        y: {signal: '-' + stackFieldGroup('min', 'parent')},
         width: {field: {group: 'width'}}
       };
       mark.encode.update = {
-        ...omit(mark.encode.update, ['x', 'xc', 'x2']),
+        ...omit(mark.encode.update, ['x', 'xc', 'x2', ...VG_CORNERRADIUS_CHANNELS]),
         width: {field: {group: 'width'}}
       };
     }
 
-    groupEncode = {
-      ...groupEncode,
-      ...pick(mark.encode.update, VG_CORNERRADIUS_CHANNELS)
-    };
-    mark.encode.update = {
-      ...mark.encode.update,
-      cornerRadiusTopLeft: {value: 0},
-      cornerRadiusTopRight: {value: 0},
-      cornerRadiusBottomLeft: {value: 0},
-      cornerRadiusBottomRight: {value: 0}
-    };
+    // Overwrite any cornerRadius set by config --- they are already moved to the group
+    for (const key of VG_CORNERRADIUS_CHANNELS) {
+      if (model.config.bar[key] != 0) {
+        mark.encode.update[key] = {value: 0};
+      }
+    }
 
     // For bin we have to add bin channels.
     const groupby: string[] = model.vgField(model.stack.groupbyChannel)
       ? [model.vgField(model.stack.groupbyChannel)]
       : [];
-    if (model.fieldDef(model.stack.groupbyChannel) && model.fieldDef(model.stack.groupbyChannel).bin) {
+    if (model.fieldDef(model.stack.groupbyChannel)?.bin) {
       groupby.push(model.vgField(model.stack.groupbyChannel, {binSuffix: 'end'}));
     }
 
