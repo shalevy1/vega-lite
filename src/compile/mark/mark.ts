@@ -154,7 +154,7 @@ function getStackGroups(model: UnitModel) {
 
     // Overwrite any cornerRadius set by config --- they are already moved to the group
     for (const key of VG_CORNERRADIUS_CHANNELS) {
-      if (model.config.bar[key] != 0) {
+      if (model.config.bar[key]) {
         mark.encode.update[key] = {value: 0};
       }
     }
