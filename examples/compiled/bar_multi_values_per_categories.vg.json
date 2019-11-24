@@ -68,6 +68,7 @@
           "clip": {"value": true},
           "x": {"scale": "x", "field": "a"},
           "width": {"scale": "x", "band": true},
+          "stroke": {"value": "white"},
           "y": {
             "signal": "min(scale('y',datum[\"min_b_start\"]),scale('y',datum[\"max_b_start\"]),scale('y',datum[\"min_b_end\"]),scale('y',datum[\"max_b_end\"]))"
           },
