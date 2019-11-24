@@ -7,5 +7,6 @@
     "y": {"aggregate": "count", "field": "*", "type": "quantitative"},
     "color": {"field": "weather", "type": "nominal"}
   },
+  "config": {"bar": {"strokeWidth": 2}},
   "autosize": {"type": "pad"}
 }
