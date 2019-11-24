@@ -120,9 +120,10 @@ function getStackGroups(model: UnitModel) {
       // Move cornerRadius, y/yc/y2/height properties to group
       // Group x/x2 should be the min/max of the marks within
       groupEncode = {
-        ...pick(mark.encode.update, ['y', 'yc', 'y2', 'height', 'stroke', ...VG_CORNERRADIUS_CHANNELS]),
+        ...pick(mark.encode.update, ['y', 'yc', 'y2', 'height', ...VG_CORNERRADIUS_CHANNELS]),
         x: {signal: stackFieldGroup('min', 'datum')},
-        x2: {signal: stackFieldGroup('max', 'datum')}
+        x2: {signal: stackFieldGroup('max', 'datum')},
+        clip: {value: true}
       };
       // Inner group should revert the x translation, and pass height through
       innerGroupEncode = {
@@ -138,9 +139,10 @@ function getStackGroups(model: UnitModel) {
       };
     } else {
       groupEncode = {
-        ...pick(mark.encode.update, ['x', 'xc', 'x2', 'width', 'stroke', ...VG_CORNERRADIUS_CHANNELS]),
+        ...pick(mark.encode.update, ['x', 'xc', 'x2', 'width', ...VG_CORNERRADIUS_CHANNELS]),
         y: {signal: stackFieldGroup('min', 'datum')},
-        y2: {signal: stackFieldGroup('max', 'datum')}
+        y2: {signal: stackFieldGroup('max', 'datum')},
+        clip: {value: true}
       };
       innerGroupEncode = {
         y: {signal: '-' + stackFieldGroup('min', 'parent')},
@@ -167,6 +169,62 @@ function getStackGroups(model: UnitModel) {
       groupby.push(model.vgField(model.stack.groupbyChannel, {binSuffix: 'end'}));
     }
 
+    // Temporary code to fix the stroke for stacked bars.
+    // When Vega fixes https://github.com/vega/vega/issues/2186, we can remove this.
+    let marks: any = [
+      {
+        type: 'group',
+        encode: {update: innerGroupEncode},
+        marks: [mark]
+      }
+    ];
+    const resolveAsEncoding = (prop: string) => {
+      const def =
+        mark.encode.update[prop] ?? (model.config[mark.type][prop] ? {value: model.config[mark.type][prop]} : null);
+      if (def) {
+        return {[prop]: def};
+      } else {
+        return {};
+      }
+    };
+    const groupStroke = {
+      ...resolveAsEncoding('stroke'),
+      ...resolveAsEncoding('strokeWidth'),
+      ...resolveAsEncoding('strokeJoin'),
+      ...resolveAsEncoding('strokeCap')
+    };
+    // (end temporary code)
+
+    if (groupStroke.stroke) {
+      groupEncode = omit(groupEncode, ['clip']);
+      marks = [
+        {
+          type: 'group',
+          encode: {
+            update: {
+              width: {field: {group: 'width'}},
+              height: {field: {group: 'height'}},
+              ...pick(groupEncode, VG_CORNERRADIUS_CHANNELS),
+              clip: {value: true}
+            }
+          },
+          marks
+        },
+        {
+          type: 'rect',
+          encode: {
+            update: {
+              width: {field: {group: 'width'}},
+              height: {field: {group: 'height'}},
+              ...pick(groupEncode, VG_CORNERRADIUS_CHANNELS),
+              ...groupStroke,
+              fill: {value: null}
+            }
+          }
+        }
+      ];
+    }
+
     return [
       {
         type: 'group',
@@ -188,17 +246,10 @@ function getStackGroups(model: UnitModel) {
         },
         encode: {
           update: {
-            clip: {value: true},
             ...groupEncode
           }
         },
-        marks: [
-          {
-            type: 'group',
-            encode: {update: innerGroupEncode},
-            marks: [mark]
-          }
-        ]
+        marks: marks
       }
     ];
   } else {
